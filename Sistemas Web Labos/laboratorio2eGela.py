@@ -6,14 +6,14 @@ de eGela.
 la estructura del HTML utilizando el bookmarklet “Visual Source Chart”.
 5.‐ Realizar el cliente Python que descarga los PDF.
 '''
-import urllib.parse
 
+import getpass
+import sys
 import requests
 from bs4 import BeautifulSoup
 
-def establecerConexion():
+def establecerConexion(uri):
     # Solicitud
-    uri = 'https://egela.ehu.eus/login/index.php'
     print('Paso 1: ' + 'GET ' + uri)
 
     # Respuesta
@@ -24,17 +24,42 @@ def establecerConexion():
     cookie = respuesta.cookies['MoodleSessionegela']
     logintoken = soup.find(attrs={'name': 'logintoken'}).get('value')
     print('El servidor devuelve la Cookie MoodleSession ' + str(cookie) + ' y el logintoken ' + str(logintoken))
-
+    cookie = 'MoodleSessionegela=' + str(cookie)
+    logintoken = str(logintoken)
+    return cookie, logintoken
 
 #establecerConexion está perfecto!!
-def accesoCredenciales():
-    pass
+def accesoCredenciales(uri, cookieSession, logintoken):
+    # Solicitud
+    usuario = sys.argv[1]
+    contrasena = getpass.getpass("Contraseña: ")
 
+    cabeceras = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': cookieSession}
+    datos = {
+        'logintoken': logintoken,
+        'username': str(usuario),
+        'password': str(contrasena)
+    }
 
+    # Respuesta
+    respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
+    print(str(respuesta.status_code) + ' ' + respuesta.reason)
+    location = respuesta.headers['Location']
+    cookie = respuesta.cookies['MoodleSessionegela']
+    print('El servidor devuelve la Cookie MoodleSession ' + str(cookie))
+    cookie = 'MoodleSessionegela=' + str(cookie)
+
+    print(location)
+
+def
 
 
 def main():
-    establecerConexion()
+    uri = 'https://egela.ehu.eus/login/index.php'
+    cookie, logintoken = establecerConexion(uri)
+    accesoCredenciales(uri, cookie, logintoken)
 
 
 
