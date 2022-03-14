@@ -12,6 +12,7 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
+# Paso 1
 def establecerConexion(uri):
     # Solicitud
     print('Paso 1: ' + 'GET ' + uri)
@@ -28,11 +29,12 @@ def establecerConexion(uri):
     logintoken = str(logintoken)
     return cookie, logintoken
 
-#establecerConexion está perfecto!!
+# Paso 2
 def accesoCredenciales(uri, cookieSession, logintoken):
     # Solicitud
     usuario = sys.argv[1]
     contrasena = getpass.getpass("Contraseña: ")
+    print('\nPaso 2: ' + 'GET ' + uri)
 
     cabeceras = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -42,6 +44,8 @@ def accesoCredenciales(uri, cookieSession, logintoken):
         'username': str(usuario),
         'password': str(contrasena)
     }
+    # No imprimo la contrasena por consola por seguridad
+    print(cookieSession + "logintoken: " + ", " + logintoken + ", username: " + str(usuario) + ", password: *********")
 
     # Respuesta
     respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
@@ -51,15 +55,53 @@ def accesoCredenciales(uri, cookieSession, logintoken):
     print('El servidor devuelve la Cookie MoodleSession ' + str(cookie))
     cookie = 'MoodleSessionegela=' + str(cookie)
 
-    print(location)
+    return cookie, location
 
-def
+def iniciarSesion(uri, cookieSession):
+    # Solicitud
+    print('\nPaso 3: ' + 'GET ' + uri)
+    cabeceras = {
+        'Cookie': cookieSession
+    }
+
+    # Respuesta
+    respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
+    print(str(respuesta.status_code) + ' ' + respuesta.reason)
+    location = respuesta.headers['Location']
+    return location
+
+def paginaCursos(uri, cookieSession):
+    # Solicitud
+    print('\nPaso 4: ' + 'GET ' + uri)
+    cabeceras = {
+        'Cookie': cookieSession
+    }
+
+    # Respuesta
+    respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
+    print(str(respuesta.status_code) + ' ' + respuesta.reason)
+
+    # Ya hemos accedido a la página con los cursos
+    # Buscamos el curso Sistemas Web
+    soup = BeautifulSoup(respuesta.content, 'html.parser')
+    elemento = soup.find(href=True, string="Sistemas Web")
+
+    # Petición
+    uri = elemento['href']
+    print('\nPaso 5: ' + 'POST ' + uri)
+    respuesta = requests.post(url=uri, headers=cabeceras, allow_redirects=False)
+    print(str(respuesta.status_code) + ' ' + respuesta.reason)
+
+    soup = BeautifulSoup(respuesta.content, 'html.parser')
+
 
 
 def main():
     uri = 'https://egela.ehu.eus/login/index.php'
     cookie, logintoken = establecerConexion(uri)
-    accesoCredenciales(uri, cookie, logintoken)
+    cookie, location = accesoCredenciales(uri, cookie, logintoken)
+    location = iniciarSesion(location, cookie)
+    paginaCursos(location, cookie)
 
 
 
