@@ -94,6 +94,11 @@ def paginaCursos(uri, cookieSession):
 
     soup = BeautifulSoup(respuesta.content, 'html.parser')
 
+    imagen_pdf = "https://egela.ehu.eus/theme/image.php/ehu/core/1646636165/f/pdf"
+    # Guardo todos los links que tienen la imagen de PDF
+    clases = soup.findParents(src=imagen_pdf)
+
+    print(clases)
 
 
 def main():
