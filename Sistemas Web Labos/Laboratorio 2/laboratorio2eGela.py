@@ -127,7 +127,7 @@ def main():
     location = iniciarSesion(location, cookie)
     paginaCursos(location, cookie)
 
-
+☺
 
 
 if __name__ == '__main__':
