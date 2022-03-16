@@ -96,28 +96,32 @@ def paginaCursos(uri, cookieSession):
 
     imagen_pdf = "https://egela.ehu.eus/theme/image.php/ehu/core/1646636165/f/pdf"
     # Guardo todos los links que tienen la imagen de PDF
+    # links es un diccionario tal que {nombreDelPDF: urlDescarga}
     links = {}
     imagenes = soup.find_all(src=imagen_pdf)
     for imagen in imagenes:
         padre = imagen.parent
         link = padre['href']
-        print(list(padre.strings)[0])
         texto = list(padre.strings)[0]
+        # Quitamos los / de algunos ficheros, ya que dan problemas al guardarlos
+        texto = texto.replace("/", " ")
         links[texto] = link
-
 
     i = 1
     for key in links:
-        print("------------------------\nDescargando el pdf: ", i, "------------------------")
-        respuesta = requests.get(url=links[key])
-        pdf = open("pdfs/" + key + ".pdf", 'wb')
-        pdf.write(respuesta.content)
-        pdf.close()
-        print(i, ": ", key, "descargado")
+        print("------------------------Descargando el pdf: ", i, "------------------------")
+        respuesta = requests.get(url=links[key], headers=cabeceras, allow_redirects=False)
+        # eGela devuelve un 303 See Other
+        respuesta = requests.get(url=respuesta.headers['Location'], headers=cabeceras, allow_redirects=False)
+        # Escribimos el pdf
+
+        with open('pdfs/' + key + '.pdf', 'wb') as f:
+            f.write(respuesta.content)
+
+        print(i, ": ", key, "descargado\n")
         i+=1
 
     print("Se han descargado los ", i, " pdfs")
-
 
 
 def main():
@@ -126,8 +130,6 @@ def main():
     cookie, location = accesoCredenciales(uri, cookie, logintoken)
     location = iniciarSesion(location, cookie)
     paginaCursos(location, cookie)
-
-☺
 
 
 if __name__ == '__main__':
