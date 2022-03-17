@@ -5,10 +5,16 @@ de eGela.
 4.‐ Localizar los PDF que aparecen en la página principal de eGela de esta asignatura en
 la estructura del HTML utilizando el bookmarklet “Visual Source Chart”.
 5.‐ Realizar el cliente Python que descarga los PDF.
+
+
+Para llamar al programa hay que escribir:
+python laboratorio2eGela.py idUsuario "Nombre Apellido"
 '''
 
 import getpass
 import sys
+from time import sleep
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -82,6 +88,25 @@ def paginaCursos(uri, cookieSession):
     print(str(respuesta.status_code) + ' ' + respuesta.reason)
 
     # Ya hemos accedido a la página con los cursos
+    # Comprobamos que nuestro nombre y apellidos aparecen en la pagina
+    try:
+        nombreApellidos = sys.argv[2].lower()
+        nombreApellidos = nombreApellidos.replace('"', "")
+        #nombreApellidos = bytes(nombreApellidos, 'utf-8')
+        print(nombreApellidos)
+
+    except Exception as e:
+        print(e)
+        print("No has introducido nombre y apellidos\nRecuerda que debes escribirlos entre comillas")
+        sleep(2)
+        exit()
+    if nombreApellidos in respuesta.text.lower():
+        input("Se ha encontrado el nombre y apellidos, pulsa enter para continuar.")
+    else:
+        print("No se ha encontrado el nombre y apellidos en la pagina de cursos\nRecuerda que debes escribirlos entre comillas\nEl programa se cerrara en 2 segundos...")
+        sleep(2)
+        exit()
+
     # Buscamos el curso Sistemas Web
     soup = BeautifulSoup(respuesta.content, 'html.parser')
     elemento = soup.find(href=True, string="Sistemas Web")
@@ -122,6 +147,7 @@ def paginaCursos(uri, cookieSession):
         i+=1
 
     print("Se han descargado los ", i, " pdfs")
+    print(imagenes)
 
 
 def main():
