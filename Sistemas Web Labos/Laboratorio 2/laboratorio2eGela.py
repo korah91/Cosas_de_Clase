@@ -118,7 +118,9 @@ def paginaCursos(uri, cookieSession):
     # Guardo todos los links que tienen la imagen de PDF
     # links es un diccionario tal que {nombreDelPDF: urlDescarga}
     links = {}
-    imagenes = soup.find_all(src=imagen_pdf)
+
+    imagenes = soup.find_all(lambda x: str(x.get('src')).__contains__('/pdf'))
+
     for imagen in imagenes:
         padre = imagen.parent
         link = padre['href']
