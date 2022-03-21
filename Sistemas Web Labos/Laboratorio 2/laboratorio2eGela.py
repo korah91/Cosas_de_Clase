@@ -1,17 +1,12 @@
 '''
-Un programa que descargue todos los pdfs
-3.‐ Programar en Python, utilizando la librería requests, una sesión HTTP con el servidor
-de eGela.
-4.‐ Localizar los PDF que aparecen en la página principal de eGela de esta asignatura en
-la estructura del HTML utilizando el bookmarklet “Visual Source Chart”.
-5.‐ Realizar el cliente Python que descarga los PDF.
-
+Autor: Joel Moisés García Escribano
 
 Para llamar al programa hay que escribir:
 python laboratorio2eGela.py idUsuario "Nombre Apellido"
 '''
 
 import getpass
+import os
 import sys
 from time import sleep
 
@@ -119,7 +114,7 @@ def paginaCursos(uri, cookieSession):
 
     soup = BeautifulSoup(respuesta.content, 'html.parser')
 
-    imagen_pdf = "https://egela.ehu.eus/theme/image.php/ehu/core/1646636165/f/pdf"
+    imagen_pdf = "https://egela.ehu.eus/theme/image.php/ehu/core/1647599885/f/pdf"
     # Guardo todos los links que tienen la imagen de PDF
     # links es un diccionario tal que {nombreDelPDF: urlDescarga}
     links = {}
@@ -131,7 +126,7 @@ def paginaCursos(uri, cookieSession):
         # Quitamos los / de algunos ficheros, ya que dan problemas al guardarlos
         texto = texto.replace("/", " ")
         links[texto] = link
-
+    os.makedirs("./pdfs", exist_ok=True)
     i = 1
     for key in links:
         print("------------------------Descargando el pdf: ", i, "------------------------")
@@ -146,8 +141,7 @@ def paginaCursos(uri, cookieSession):
         print(i, ": ", key, "descargado\n")
         i+=1
 
-    print("Se han descargado los ", i, " pdfs")
-    print(imagenes)
+    print("Se han descargado los ", i-1, " pdfs\n")
 
 
 def main():

@@ -1,0 +1,20 @@
+1647518028482	geckodriver	INFO	Listening on 127.0.0.1:53246
+1647518030525	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "53247" "-no-remote" "-profile" "C:\\Users\\Joel\\AppData\\Local\\Temp\\rust_mozprofileu6Dwoy"
+1647518031733	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\Joel\\AppData\\Local\\Temp\\rust_mozprofileu6Dwoy\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53247/devtools/browser/1e017f1e-04af-4a8a-aa3e-bd045b23be45
+1647518035658	Marionette	INFO	Listening on port 53252
+1647518036016	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://websistemak-httptest.appspot.com"
+1647518366734	Marionette	INFO	Stopped listening on port 53252
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1647598240205	geckodriver	INFO	Listening on 127.0.0.1:55156
+1647598242344	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "55157" "-no-remote" "-profile" "C:\\Users\\Joel\\AppData\\Local\\Temp\\rust_mozprofile0xOl7v"
+1647598242983	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\Joel\\AppData\\Local\\Temp\\rust_mozprofile0xOl7v\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55157/devtools/browser/d5d44da9-be43-40c1-86f0-ede36fdea95f
+1647598246817	Marionette	INFO	Listening on port 55162
+1647598246871	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://websistemak-httptest.appspot.com"
+1647598366343	Marionette	INFO	Stopped listening on port 55162
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
