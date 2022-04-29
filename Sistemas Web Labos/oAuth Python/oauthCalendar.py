@@ -1,4 +1,5 @@
 #-- coding: utf-8 --
+from importlib.metadata import files
 import urllib.parse
 import requests
 import webbrowser
@@ -109,9 +110,12 @@ print("\nStep 6.- Calling Google APIs")
 metodo = 'GET'
 uri= "https://www.googleapis.com/drive/v3/files"
 cabeceras= {'Host':'www.googleapis.com', 'Content-Type': 'application/x-www-form-urlencoded','Authorization':'Bearer '+access_token}
-respuesta = requests.request(metodo, uri,headers=cabeceras, allow_redirects=False)
 
-print(json.loads(respuesta.text))
+respuesta = requests.request(metodo, uri,headers=cabeceras, allow_redirects=False)
+ficheros = json.loads(respuesta.text)['files']
+for each in ficheros:
+    print(each['name'])
+#print(json.loads(respuesta.text))
 
 #Conseguir Lista Calendarios
 #Conseguir Lista Eventos
