@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from cgitb import text
 from tkinter import messagebox
+from urllib.request import Request
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -35,8 +36,8 @@ class eGela:
         logintoken = soup.find(attrs={'name': 'logintoken'}).get('value')
         logintoken = str(logintoken)
         cookie = 'MoodleSessionegela=' + str(cookie)
-        
-        
+        print("Cookie: "+str(cookie))
+
         #############################################
         # RELLENAR CON CODIGO DE LA PETICION HTTP
         # Y PROCESAMIENTO DE LA RESPUESTA HTTP
@@ -46,25 +47,6 @@ class eGela:
         progress_bar.update()
         time.sleep(1)
 
-        cabeceras = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Cookie': cookie}
-        datos = {
-            'logintoken': logintoken,
-            'username': username.get(),
-            'password': password.get()
-        }
-        # No imprimo la contrasena por consola por seguridad
-        print("Cookie: " + cookie + " Logintoken: " +logintoken)
-
-        # Respuesta
-        print("Paso 2")
-        
-        respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
-        print(str(respuesta.status_code) + ' ' + respuesta.reason + " " + str(respuesta.headers['Location']))
-        uri = respuesta.headers['Location']
-       
-        #cookie = respuesta.cookies['MoodleSessionegela']
 
         print("##### 2. PETICION #####")
        
@@ -79,19 +61,29 @@ class eGela:
         time.sleep(1)
         
         cabeceras = {
-        'Cookie': cookie
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie': cookie}
+        datos = {
+            'logintoken': logintoken,
+            'username': username.get(),
+            'password': password.get()
         }
-
         # Respuesta
-        print("Paso 3")
-        print(cookie)
-        print(uri)
-        respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
-        print(str(respuesta.status_code) + ' ' + respuesta.reason)
-        #uri = respuesta.headers['Location']
+        print("Paso 2")
+        # No imprimo la contrasena por consola por seguridad
+        print("Cookie: " + cookie + " Logintoken: " +logintoken)
 
-
-
+        respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
+        print(str(respuesta.status_code) + ' ' + respuesta.reason + " " + str(respuesta.headers['Location']))
+        uri = respuesta.headers['Location']
+        
+        # Si no hay una cookie MoodleSessionegela no son correctas la contrasena y usuario
+        if (len(respuesta.cookies)):
+            self._login = 1
+            cookie = 'MoodleSessionegela=' + str(respuesta.cookies['MoodleSessionegela'])
+            print("Es correcto")
+        else:
+            print("No es correcto")
 
         print("\n##### 3. PETICION #####")
         #############################################
@@ -105,6 +97,17 @@ class eGela:
         time.sleep(1)
 
 
+        cabeceras = {
+        'Cookie': cookie
+        }
+
+        # Respuesta
+        print("Paso 3")
+        print(cookie)
+        print(uri)
+        respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
+        print(str(respuesta.status_code) + ' ' + respuesta.reason)
+        #uri = respuesta.headers['Location']
 
 
         print("\n##### 4. PETICION #####")
@@ -120,8 +123,7 @@ class eGela:
         time.sleep(1)
         popup.destroy()
 
-        if True:
-            self._login = 0
+        if (self._login == 1):
             self._root.destroy()
         else:
             messagebox.showinfo("Alert Message", "Login incorrect!")
