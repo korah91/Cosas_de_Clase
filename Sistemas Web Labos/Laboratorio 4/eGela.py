@@ -25,14 +25,17 @@ class eGela:
         print("##### 1. PETICION #####")
         
         uri='https://egela.ehu.eus/login/index.php'
+        print("Paso 1")
+
         respuesta = requests.get(url=uri)
         soup = BeautifulSoup(respuesta.content, 'html.parser')
-        #print(soup.prettify())
+
         print(str(respuesta.status_code) + ' ' + respuesta.reason)
         cookie = respuesta.cookies['MoodleSessionegela']
         logintoken = soup.find(attrs={'name': 'logintoken'}).get('value')
-        cookie = 'MoodleSessionegela=' + str(cookie)
         logintoken = str(logintoken)
+        cookie = 'MoodleSessionegela=' + str(cookie)
+        
         
         #############################################
         # RELLENAR CON CODIGO DE LA PETICION HTTP
@@ -48,23 +51,20 @@ class eGela:
             'Cookie': cookie}
         datos = {
             'logintoken': logintoken,
-            'username': str(username),
-            'password': str(password)
+            'username': username.get(),
+            'password': password.get()
         }
         # No imprimo la contrasena por consola por seguridad
         print("Cookie: " + cookie + " Logintoken: " +logintoken)
 
         # Respuesta
-        respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
-        print("###########\n"+ str(respuesta.headers) + "#########\n")
-        print(str(respuesta.status_code) + ' ' + respuesta.reason)
-        location = respuesta.headers['Location']
+        print("Paso 2")
         
-        print("LAS COOKIES SON " + str(respuesta.cookies))
-
-        cookie = respuesta.cookies['MoodleSessionegela']
-        print('El servidor devuelve la Cookie MoodleSession ' + str(cookie))
-        cookie = 'MoodleSessionegela=' + str(cookie)
+        respuesta = requests.post(url=uri, headers=cabeceras, data=datos, allow_redirects=False)
+        print(str(respuesta.status_code) + ' ' + respuesta.reason + " " + str(respuesta.headers['Location']))
+        uri = respuesta.headers['Location']
+       
+        #cookie = respuesta.cookies['MoodleSessionegela']
 
         print("##### 2. PETICION #####")
        
@@ -77,8 +77,18 @@ class eGela:
         progress_var.set(progress)
         progress_bar.update()
         time.sleep(1)
+        
+        cabeceras = {
+        'Cookie': cookie
+        }
 
-
+        # Respuesta
+        print("Paso 3")
+        print(cookie)
+        print(uri)
+        respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
+        print(str(respuesta.status_code) + ' ' + respuesta.reason)
+        #uri = respuesta.headers['Location']
 
 
 
@@ -102,14 +112,7 @@ class eGela:
         # RELLENAR CON CODIGO DE LA PETICION HTTP
         # Y PROCESAMIENTO DE LA RESPUESTA HTTP
         #############################################
-        cabeceras = {
-        'Cookie': cookie
-        }
 
-        # Respuesta
-        respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
-        print(str(respuesta.status_code) + ' ' + respuesta.reason)
-        location = respuesta.headers['Location']
 
         progress = 100
         progress_var.set(progress)
@@ -117,7 +120,7 @@ class eGela:
         time.sleep(1)
         popup.destroy()
 
-        if respuesta.status_code == 400:
+        if True:
             self._login = 0
             self._root.destroy()
         else:
