@@ -116,6 +116,8 @@ class eGela:
         # Y PROCESAMIENTO DE LA RESPUESTA HTTP
         #############################################
 
+        # Guardo la ultima cookie
+        self._cookie = cookie
 
         progress = 100
         progress_var.set(progress)
@@ -129,8 +131,6 @@ class eGela:
             messagebox.showinfo("Alert Message", "Login incorrect!")
 
 
-        # Guardo la ultima cookie
-        self._cookie = cookie
 
     def get_pdf_refs(self):
         popup, progress_var, progress_bar = helper.progress("get_pdf_refs", "Downloading PDF list...")
@@ -143,7 +143,8 @@ class eGela:
         cabeceras = {
         'Cookie': self._cookie
         }
-
+        
+        uri='https://egela.ehu.eus/'
         # Respuesta
         respuesta = requests.get(url=uri, headers=cabeceras, allow_redirects=False)
         print(str(respuesta.status_code) + ' ' + respuesta.reason)
@@ -151,6 +152,9 @@ class eGela:
         # Ya hemos accedido a la página con los cursos
         # Buscamos el curso Sistemas Web
         soup = BeautifulSoup(respuesta.content, 'html.parser')
+        f = open('pagina.html', 'w')
+        f.write(str(respuesta.content))
+
         elemento = soup.find(href=True, string="Sistemas Web")
 
         # Petición
@@ -168,8 +172,13 @@ class eGela:
         imagenes = soup.find_all(lambda x: str(x.get('src')).__contains__('/pdf'))       
 
         numPDFs = len(imagenes)
-        progress_step = float(100.0 / len(numPDFs))
- 
+        # INICIALIZA Y ACTUALIZAR BARRA DE PROGRESO
+        # POR CADA PDF ANIADIDO EN self._refs
+        progress_step = float(100.0 / numPDFs)
+
+
+
+
         for imagen in imagenes:
             # links es un diccionario tal que {nombreDelPDF: urlDescarga}
             links = {}
@@ -182,18 +191,15 @@ class eGela:
             # {pdf_name: nombrePDF, pdf_link: linkPDF}
             links['pdf_name'] = texto
             links['pdf_link'] = link
-            
-            # Anado el diccionario a _refs
-
-            
+            print(links)
+            # Anado el diccionario a _refs 
             self._refs.append(links)
-            # INICIALIZA Y ACTUALIZAR BARRA DE PROGRESO
-            # POR CADA PDF ANIADIDO EN self._refs
-            progress_step = float(100.0 / numPDFs)
+            
             progress += progress_step
             progress_var.set(progress)
             progress_bar.update()
             time.sleep(0.1)
+            #print("pdf: " + texto + " | " + link)
 
         # Ya esta listo _refs
         popup.destroy()
