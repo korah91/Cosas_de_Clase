@@ -5,8 +5,8 @@ from socket import AF_INET, socket, SOCK_STREAM
 import json
 import helper
 
-app_key = ''
-app_secret = ''
+app_key = 'xz7g070lqoalgek'
+app_secret = 'vq0bndl6310xa1z'
 server_addr = "localhost"
 server_port = 8090
 redirect_uri = "http://" + server_addr + ":" + str(server_port)
@@ -59,6 +59,20 @@ class Dropbox:
         # Y PROCESAMIENTO DE LAS RESPUESTAS HTTP
         # PARA LA OBTENCION DEL ACCESS TOKEN
         #############################################
+
+        # https://www.dropbox.com/oauth2/authorize?client_id=<APP_KEY>
+        # &response_type=code&code_challenge=<CHALLENGE>&code_challenge_method=<METHOD>
+        scope = 'https://www.dropbox.com/oauth2/authorize'
+        datos = { 
+          'client_id': app_key,
+          'response_type': 'code',
+          'code_challenge': 'S256',
+          'code_challenge_method': 'S256',
+          'scope': scope}
+        datos_encoded = urllib.parse.urlencode(datos)
+
+
+        
 
         self._root.destroy()
 
