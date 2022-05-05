@@ -62,15 +62,35 @@ class Dropbox:
 
         # https://www.dropbox.com/oauth2/authorize?client_id=<APP_KEY>
         # &response_type=code&code_challenge=<CHALLENGE>&code_challenge_method=<METHOD>
-        scope = 'https://www.dropbox.com/oauth2/authorize'
+        uri = 'https://www.dropbox.com/oauth2/authorize'
         datos = { 
-          'client_id': app_key,
-          'response_type': 'code',
-          'code_challenge': 'S256',
-          'code_challenge_method': 'S256',
-          'scope': scope}
+            'client_id': app_key,
+            'redirect_uri': redirect_uri,
+            'response_type': 'code',
+            'code_challenge': 'S256',
+            'code_challenge_method': 'S256',
+            }
         datos_encoded = urllib.parse.urlencode(datos)
 
+        print("\tOpenning browser...")
+        webbrowser.open_new ((uri +'?' + datos_encoded))
+
+        # Recogemos el codigo para autentificarnos
+        codigo_auth = self.local_server()
+        # Ya tenemos el codigo_auth. Nos conectamos a la api
+        url = "https://api.dropboxapi.com/oauth2/token"
+
+        headers = {
+            'Host': 'api.dropboxapi.com',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+        datos = {
+            'client_id': app_key,
+            'client_secret': app_secret,
+            'redirect-uri': redirect_uri,
+            'code': codigo_auth
+        }
 
         
 
