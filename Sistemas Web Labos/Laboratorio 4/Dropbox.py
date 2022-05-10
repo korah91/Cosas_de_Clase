@@ -54,12 +54,6 @@ class Dropbox:
         return auth_code
 
     def do_oauth(self):
-        #############################################
-        # RELLENAR CON CODIGO DE LAS PETICIONES HTTP
-        # Y PROCESAMIENTO DE LAS RESPUESTAS HTTP
-        # PARA LA OBTENCION DEL ACCESS TOKEN
-        #############################################
-
         # https://www.dropbox.com/oauth2/authorize?client_id=<APP_KEY>
         # &response_type=code&code_challenge=<CHALLENGE>&code_challenge_method=<METHOD>
         uri = 'https://www.dropbox.com/oauth2/authorize'
@@ -80,33 +74,50 @@ class Dropbox:
         # Ya tenemos el codigo_auth. Nos conectamos a la api
         url = "https://api.dropboxapi.com/oauth2/token"
 
-        headers = {
+        cabecera = {
             'Host': 'api.dropboxapi.com',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
         datos = {
+            'code': codigo_auth,
             'client_id': app_key,
             'client_secret': app_secret,
-            'redirect-uri': redirect_uri,
-            'code': codigo_auth
+            'redirect-uri': redirect_uri
         }
 
-        
+        r = requests.post(url=url, data=datos, headers=cabecera, allow_redirects=False)
+        print("Conexión a /oauth2/token: " + str(r.status_code))
 
+        # Recibo el token que necesito
+        json = json.loads(r.text)
+        token = json['access_token']
+        print('access_token: ' + access_token)
+
+        # Lo guardo
+        self._access_token = token
+        
         self._root.destroy()
 
     def list_folder(self, msg_listbox):
         print("/list_folder")
         uri = 'https://api.dropboxapi.com/2/files/list_folder'
         # https://www.dropbox.com/developers/documentation/http/documentation#files-list_folder
-        #############################################
-        # RELLENAR CON CODIGO DE LA PETICION HTTP
-        # Y PROCESAMIENTO DE LA RESPUESTA HTTP
-        #############################################
-        contenido_json=""
 
+        #Creo las cabeceras
+        headers = {
+            "Authorization": "Bearer " + self._access_token,
+            "Content-Type": "application/json"
+        }
 
+        data = {
+            "path": self._path
+        }
+
+        r = requests.post(uri, headers=headers, data=json.dumps(data), allow_redirects=False)
+        print("Conexión a /list_folder: " + str(r.status_code))
+
+        contenido_json=json.loads(r.text)
 
         self._files = helper.update_listbox2(msg_listbox, self._path, contenido_json)
 
@@ -114,24 +125,51 @@ class Dropbox:
         print("/upload")
         uri = 'https://content.dropboxapi.com/2/files/upload'
         # https://www.dropbox.com/developers/documentation/http/documentation#files-upload
-        #############################################
-        # RELLENAR CON CODIGO DE LA PETICION HTTP
-        # Y PROCESAMIENTO DE LA RESPUESTA HTTP
-        #############################################
+
+        headers = {
+            "Authorization": "Bearer " + self._access_token,
+            "Content-Type": "application/octet-stream",
+            "path": file_path,
+            'mode': 'add',
+            'autorename': True
+        }
+        # En la documentacion pone que deberia poner: Dropbox-API-Arg: {"path":"file_path","mode":{".tag":"add"},"autorename":true}
+
+        r = requests.post(uri, headers=headers, allow_redirects=False)
+        print("Conexión a /upload: " + str(r.status_code))
+
 
     def delete_file(self, file_path):
         print("/delete_file")
         uri = 'https://api.dropboxapi.com/2/files/delete_v2'
         # https://www.dropbox.com/developers/documentation/http/documentation#files-delete
-        #############################################
-        # RELLENAR CON CODIGO DE LA PETICION HTTP
-        # Y PROCESAMIENTO DE LA RESPUESTA HTTP
-        #############################################
+       
+        headers = {
+            "Authorization": "Bearer " + self._access_token,
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "path": file_path
+        }
+
+        r = requests.post(uri, headers=headers, data=json.dumps(data))
+        print("Conexión a /delete: " + str(r.status_code))
 
     def create_folder(self, path):
         print("/create_folder")
        # https://www.dropbox.com/developers/documentation/http/documentation#files-create_folder
-        #############################################
-        # RELLENAR CON CODIGO DE LA PETICION HTTP
-        # Y PROCESAMIENTO DE LA RESPUESTA HTTP
-        #############################################
+
+        headers = {
+            "Authorization": "Bearer " + self._access_token,
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "path": path
+        }
+
+        r = requests.post(url, headers=headers, data=json.dumps(data), allow_redirects=False)
+        print("Conexión a /create_folder: " + str(r.status_code))
+
+        
