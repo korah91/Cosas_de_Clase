@@ -92,7 +92,7 @@ class Dropbox:
         # Recibo el token que necesito
         json = json.loads(r.text)
         token = json['access_token']
-        print('access_token: ' + access_token)
+        print('access_token: ' + token)
 
         # Lo guardo
         self._access_token = token
@@ -159,7 +159,7 @@ class Dropbox:
     def create_folder(self, path):
         print("/create_folder")
        # https://www.dropbox.com/developers/documentation/http/documentation#files-create_folder
-
+        url = 'https://api.dropboxapi.com/2/files/create_folder_v2'
         headers = {
             "Authorization": "Bearer " + self._access_token,
             "Content-Type": "application/json"
