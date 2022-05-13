@@ -13,7 +13,7 @@ class eGela:
     _cookie = ""
     _refs = []
     _root = None
-
+#prueba
     def __init__(self, root):
         self._root = root
 
