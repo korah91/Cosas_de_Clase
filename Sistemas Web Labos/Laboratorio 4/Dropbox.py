@@ -61,8 +61,6 @@ class Dropbox:
             'client_id': app_key,
             'redirect_uri': redirect_uri,
             'response_type': 'code',
-            'code_challenge': 'S256',
-            'code_challenge_method': 'S256',
             }
         datos_encoded = urllib.parse.urlencode(datos)
 
