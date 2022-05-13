@@ -81,15 +81,16 @@ class Dropbox:
             'code': codigo_auth,
             'client_id': app_key,
             'client_secret': app_secret,
-            'redirect-uri': redirect_uri
+            'redirect_uri': redirect_uri,
+            'grant_type': 'authorization_code'
         }
 
         r = requests.post(url=url, data=datos, headers=cabecera, allow_redirects=False)
         print("Conexión a /oauth2/token: " + str(r.status_code))
 
         # Recibo el token que necesito
-        json = json.loads(r.text)
-        token = json['access_token']
+        jason = json.loads(r.text)
+        token = jason['access_token']
         print('access_token: ' + token)
 
         # Lo guardo
@@ -108,13 +109,17 @@ class Dropbox:
             "Content-Type": "application/json"
         }
 
+        # borro el / del path porque la nueva api no lo necesita y me da error
+        if self._path == "/":
+            self._path = ""
+        
         data = {
             "path": self._path
         }
 
         r = requests.post(uri, headers=headers, data=json.dumps(data), allow_redirects=False)
         print("Conexión a /list_folder: " + str(r.status_code))
-
+        print(r.text)
         contenido_json=json.loads(r.text)
 
         self._files = helper.update_listbox2(msg_listbox, self._path, contenido_json)
@@ -124,18 +129,22 @@ class Dropbox:
         uri = 'https://content.dropboxapi.com/2/files/upload'
         # https://www.dropbox.com/developers/documentation/http/documentation#files-upload
 
+        argDropbox = {
+                "path":file_path,
+                "mode": "add",
+                "autorename":True
+        }
         headers = {
             "Authorization": "Bearer " + self._access_token,
             "Content-Type": "application/octet-stream",
-            "path": file_path,
-            'mode': 'add',
-            'autorename': True
+            "Dropbox-API-Arg": json.dumps(argDropbox)
         }
         # En la documentacion pone que deberia poner: Dropbox-API-Arg: {"path":"file_path","mode":{".tag":"add"},"autorename":true}
 
         r = requests.post(uri, headers=headers, allow_redirects=False)
+        
         print("Conexión a /upload: " + str(r.status_code))
-
+        print(r.text)
 
     def delete_file(self, file_path):
         print("/delete_file")

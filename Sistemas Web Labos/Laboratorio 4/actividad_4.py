@@ -251,6 +251,16 @@ button3 = tk.Button(frame2, borderwidth=4, text="Create folder", width=10, pady=
 button3.pack(padx=2, pady=2)
 frame2.grid(row=1, column=3,  ipadx=10, ipady=10)
 
+# Frame con botones Create y Delete (1,3)
+
+frame3 = tk.Frame(newroot)
+button4 = tk.Button(frame3, borderwidth=4, text="AAAA", width=10, pady=8, command=delete_files)
+button4.pack(padx=2, pady=2)
+frame2.grid(row=1, column=3,  ipadx=10, ipady=10)
+
+
+
+
 for each in pdfs:
     msg_listbox1.insert(tk.END, each['pdf_name'])
     msg_listbox1.yview(tk.END)
