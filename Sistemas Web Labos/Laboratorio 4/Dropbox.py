@@ -179,4 +179,23 @@ class Dropbox:
         r = requests.post(url, headers=headers, data=json.dumps(data), allow_redirects=False)
         print("Conexión a /create_folder: " + str(r.status_code))
 
+#Esta es la nueva funcionalidad que hemos implementado: devuelve el numero de ficheros totales del usuario
+    def contar_ficheros(self):
+
+        print("/count")
+        
+        url = 'https://api.dropboxapi.com/2/file_requests/count'
+        headers = {
+            "Authorization": "Bearer " + self._access_token,
+            "Content-Type": "application/json",
+            'Dropbox-Api-Select-User': str(app_key)
+        }
+
+        data = None
+
+        r = requests.post(url, headers=headers, data = json.dumps(data), allow_redirects=False)
+        print("Conexión a /count: " + str(r.status_code))
+        print(r.text)
+        return (r.text)
+    
         

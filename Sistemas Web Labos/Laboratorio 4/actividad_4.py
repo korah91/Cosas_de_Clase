@@ -81,6 +81,15 @@ def delete_files():
     popup.destroy()
     dropbox.list_folder(msg_listbox2)
 
+# Esta es la funcion que hemos creado
+
+def contar_ficheros():
+    n = dropbox.contar_ficheros()
+    tk.messagebox.showinfo('Tienes ' + str(n) + ' ficheros en tu cuenta')
+
+
+
+
 def name_folder(folder_name):
     if dropbox._path == "/":
         dropbox._path = dropbox._path + str(folder_name)
@@ -249,12 +258,10 @@ button2 = tk.Button(frame2, borderwidth=4, text="Delete", width=10, pady=8, comm
 button2.pack(padx=2, pady=2)
 button3 = tk.Button(frame2, borderwidth=4, text="Create folder", width=10, pady=8, command=create_folder)
 button3.pack(padx=2, pady=2)
-frame2.grid(row=1, column=3,  ipadx=10, ipady=10)
 
 # Frame con botones Create y Delete (1,3)
 
-frame3 = tk.Frame(newroot)
-button4 = tk.Button(frame3, borderwidth=4, text="AAAA", width=10, pady=8, command=delete_files)
+button4 = tk.Button(frame2, borderwidth=4, text="ContarFicheros", width=10, pady=8, command=contar_ficheros)
 button4.pack(padx=2, pady=2)
 frame2.grid(row=1, column=3,  ipadx=10, ipady=10)
 
