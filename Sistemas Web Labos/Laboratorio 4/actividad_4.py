@@ -39,6 +39,7 @@ def transfer_files():
         progress_bar.update()
         newroot.update()
 
+
         if dropbox._path == "/":
             path = "/" + unquote(pdf_name)
             print ("----------------------: "+ pdf_name)
@@ -84,11 +85,9 @@ def delete_files():
 # Esta es la funcion que hemos creado
 
 def contar_ficheros():
-    n = dropbox.contar_ficheros()
-    tk.messagebox.showinfo('Tienes ' + str(n) + ' ficheros en tu cuenta')
-
-
-
+    n= len(selected_items1)
+    #n = dropbox.contar_ficheros()
+    tk.messagebox.showinfo('Numero ficheros: ','Vas a traspasar ' + str(n) + ' ficheros nuevos a tu cuenta')
 
 def name_folder(folder_name):
     if dropbox._path == "/":
@@ -258,11 +257,12 @@ button2 = tk.Button(frame2, borderwidth=4, text="Delete", width=10, pady=8, comm
 button2.pack(padx=2, pady=2)
 button3 = tk.Button(frame2, borderwidth=4, text="Create folder", width=10, pady=8, command=create_folder)
 button3.pack(padx=2, pady=2)
-
-# Frame con botones Create y Delete (1,3)
-
-button4 = tk.Button(frame2, borderwidth=4, text="ContarFicheros", width=10, pady=8, command=contar_ficheros)
+button4 = tk.Button(frame1, borderwidth=4, text="ContarFicheros", width=10, pady=8, command=contar_ficheros)
 button4.pack(padx=2, pady=2)
+
+# Frame con botones Create, Contar y Delete (1,3)
+
+
 frame2.grid(row=1, column=3,  ipadx=10, ipady=10)
 
 
