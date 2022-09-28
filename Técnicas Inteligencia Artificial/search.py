@@ -81,30 +81,63 @@ def depthFirstSearch(problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-
-    caminoFinal = []
-    pila = util.Stack
-    sucesores = problem.getSuccessors()
-    
-    while(not pila.isEmpty()):
-        actual = pila.pop()
         
+    # Si el inicio es el fin
+    if(problem.isGoalState(problem.getStartState())):
+        return problem.getStartState()
 
+    vistos = []
+    pila = util.Stack()
+    pila.push(problem.getStartState())
+    # Diccionario para guardar el camino para ir desde el inicio hasta cada estado
+    diccionario = {}
+    
+    
+    # Caso general
+    while not pila.isEmpty():
+        act = pila.pop() # act = (x,y)
+        
+        # Compruebo que no sea el objetivo
+        if(problem.isGoalState(act)):
+            print(f'Vistos: {vistos}')
+            print(f'El diccionario es: {diccionario}')
+            print(act)
+            print(diccionario.get(act))
+            return diccionario.get(act)
 
+        # Compruebo que no lo he revisado ya
+        if act not in vistos:
+            # Lo marco como visto
+            vistos.append(act)
 
+            # Añado los sucesores a la pila
+            for i in problem.getSuccessors(act):
+                # Añado solo la coordenada
+                pila.push(i[0])                
+                
+                # Añado el camino que he seguido 
+                camino = i[1][0].lower()
+                print(camino)
+                # Caso Critico: Primer estado que no tiene camino todavia
+                if(diccionario.get(act) == None):
+                    diccionario[i[0]] = list(camino)
+                    
+                # Caso General: Voy acumulando el camino
+                else:
+                    print(f'dict de {act} es {diccionario.get(act)}')
+                    d = diccionario.get(act) + list(camino)
+                    #print(f'd es {d}')
+                    diccionario[i[0]] = diccionario.get(act).append(camino)
+                    
+                #print(f'Camino para {i[0]} es  {diccionario.get(i[0])}')
+    
+    # camino = [n,n,w,e,s,w,...]
+    return camino
 
-
-
-    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
