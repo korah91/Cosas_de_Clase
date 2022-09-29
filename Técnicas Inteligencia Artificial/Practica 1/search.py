@@ -83,63 +83,6 @@ def depthFirstSearch(problem):
     understand the search problem that is being passed in:
     """
 
-    '''  
-
-      
-    # Si el inicio es el fin
-    if(problem.isGoalState(problem.getStartState())):
-        return problem.getStartState()
-
-    vistos = []
-    pila = util.Stack()
-    pila.push(problem.getStartState())
-    # Diccionario para guardar el camino para ir desde el inicio hasta cada estado
-    diccionario = {}
-    
-    
-    # Caso general
-    while not pila.isEmpty():
-        act = pila.pop() # act = (x,y)
-        
-        # Compruebo que no sea el objetivo
-        if(problem.isGoalState(act)):
-            print(f'Vistos: {vistos}')
-            print(f'El diccionario es: {diccionario}')
-            print(act)
-            print(diccionario.get(act))
-            return diccionario.get(act)
-
-        # Compruebo que no lo he revisado ya
-        if act not in vistos:
-            # Lo marco como visto
-            vistos.append(act)
-
-            # Añado los sucesores a la pila
-            for i in problem.getSuccessors(act):
-                # Añado solo la coordenada
-                pila.push(i[0])                
-                
-                # Añado el camino que he seguido 
-                camino = i[1][0].lower()
-                print(camino)
-                # Caso Critico: Primer estado que no tiene camino todavia
-                if(diccionario.get(act) == None):
-                    diccionario[i[0]] = list(camino)
-                    
-                # Caso General: Voy acumulando el camino
-                else:
-                    print(f'dict de {act} es {diccionario.get(act)}')
-                    d = diccionario.get(act) + list(camino)
-                    #print(f'd es {d}')
-                    diccionario[i[0]] = diccionario.get(act).append(camino)
-                    
-                #print(f'Camino para {i[0]} es  {diccionario.get(i[0])}')
-    
-    # camino = [n,n,w,e,s,w,...]
-    return camino
-    '''
-    # Si el inicio es el fin
-
     from game import Directions
 
     if(problem.isGoalState(problem.getStartState())):
@@ -151,12 +94,6 @@ def depthFirstSearch(problem):
     vistos = []
     caminos = {}
     camino_final = []
-    direcciones = {
-        'n': Directions.NORTH,
-        'e': Directions.EAST,
-        's': Directions.SOUTH,
-        'w': Directions.WEST
-    }
 
     while not stack.isEmpty():
         act = stack.pop()
@@ -165,7 +102,7 @@ def depthFirstSearch(problem):
             vistos.append(act) # Lo marco como visto
             if problem.isGoalState(act):              
                 # Reemplazo cada direccion por su tipo
-                camino_final = [direcciones.get(character) for character in list(caminos.get(act))]
+                camino_final = caminos.get(act)
                 print(camino_final)
                 return camino_final
 
@@ -173,15 +110,10 @@ def depthFirstSearch(problem):
                 stack.push(sucesor[0])
                 # Caso Critico: Primer estado que no tiene camino todavia
                 if caminos.get(act) == None:
-                    caminos[sucesor[0]] = sucesor[1][0].lower()
+                    caminos[sucesor[0]] = [] + [sucesor[1]]
                 # Caso General: Voy acumulando el camino
                 else:
-                    caminos[sucesor[0]] = caminos.get(act) + sucesor[1][0].lower()
-    
-    
-    '''    for character in list(caminos.get(act)):
-        camino_final.append(direcciones.get(character))
-    '''
+                    caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
     
     return False
 
@@ -189,8 +121,37 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    if(problem.isGoalState(problem.getStartState())):
+        return problem.getStartState()
+
+    act = problem.getStartState() # Devuelve la coordenada inicial
+    cola = util.Queue()
+    cola.push(act)
+    vistos = []
+    caminos = {}
+    camino_final = []
+
+    while not cola.isEmpty():
+        act = cola.pop()
+
+        if act not in vistos:
+            vistos.append(act) # Lo marco como visto
+            if problem.isGoalState(act):              
+                # Reemplazo cada direccion por su tipo
+                camino_final = caminos.get(act)
+                print(camino_final)
+                return camino_final
+
+            for sucesor in problem.getSuccessors(act):
+                cola.push(sucesor[0])
+                # Caso Critico: Primer estado que no tiene camino todavia
+                if caminos.get(act) == None:
+                    caminos[sucesor[0]] = [] + [sucesor[1]]
+                # Caso General: Voy acumulando el camino
+                else:
+                    caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+    return False
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
