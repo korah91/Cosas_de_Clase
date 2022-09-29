@@ -82,10 +82,10 @@ def depthFirstSearch(problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     """
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-        
+
+    '''  
+
+      
     # Si el inicio es el fin
     if(problem.isGoalState(problem.getStartState())):
         return problem.getStartState()
@@ -137,6 +137,54 @@ def depthFirstSearch(problem):
     
     # camino = [n,n,w,e,s,w,...]
     return camino
+    '''
+    # Si el inicio es el fin
+
+    from game import Directions
+
+    if(problem.isGoalState(problem.getStartState())):
+        return problem.getStartState()
+
+    act = problem.getStartState() # Devuelve la coordenada inicial
+    stack = util.Stack()
+    stack.push(act)
+    vistos = []
+    caminos = {}
+    camino_final = []
+    direcciones = {
+        'n': Directions.NORTH,
+        'e': Directions.EAST,
+        's': Directions.SOUTH,
+        'w': Directions.WEST
+    }
+
+    while not stack.isEmpty():
+        act = stack.pop()
+
+        if act not in vistos:
+            vistos.append(act) # Lo marco como visto
+            if problem.isGoalState(act):              
+                # Reemplazo cada direccion por su tipo
+                camino_final = [direcciones.get(character) for character in list(caminos.get(act))]
+                print(camino_final)
+                return camino_final
+
+            for sucesor in problem.getSuccessors(act):
+                stack.push(sucesor[0])
+                # Caso Critico: Primer estado que no tiene camino todavia
+                if caminos.get(act) == None:
+                    caminos[sucesor[0]] = sucesor[1][0].lower()
+                # Caso General: Voy acumulando el camino
+                else:
+                    caminos[sucesor[0]] = caminos.get(act) + sucesor[1][0].lower()
+    
+    
+    '''    for character in list(caminos.get(act)):
+        camino_final.append(direcciones.get(character))
+    '''
+    
+    return False
+
 
 
 def breadthFirstSearch(problem):
