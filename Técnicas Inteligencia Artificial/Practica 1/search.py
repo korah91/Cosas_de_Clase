@@ -101,7 +101,6 @@ def depthFirstSearch(problem):
         if act not in vistos:
             vistos.append(act) # Lo marco como visto
             if problem.isGoalState(act):              
-                # Reemplazo cada direccion por su tipo
                 camino_final = caminos.get(act)
                 print(camino_final)
                 return camino_final
@@ -130,28 +129,39 @@ def breadthFirstSearch(problem):
     cola.push(act)
     vistos = []
     caminos = {}
-    camino_final = []
 
     while not cola.isEmpty():
         act = cola.pop()
-
+        print(act)
         if act not in vistos:
             vistos.append(act) # Lo marco como visto
             if problem.isGoalState(act):              
-                # Reemplazo cada direccion por su tipo
-                camino_final = caminos.get(act)
-                print(camino_final)
-                return camino_final
+                print(f'El fin: {caminos.get(act)}')
+                return caminos.get(act)
 
             for sucesor in problem.getSuccessors(act):
+                print(f'Sucesor: {sucesor}')
                 cola.push(sucesor[0])
                 # Caso Critico: Primer estado que no tiene camino todavia
                 if caminos.get(act) == None:
                     caminos[sucesor[0]] = [] + [sucesor[1]]
+
                 # Caso General: Voy acumulando el camino
                 else:
-                    caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
-    return False
+                    # Para conseguir el camino más corto voy mejorando el camino a seguir para llegar a un estado
+                    # Si el sucesor ya esta en caminos ya he trazado un camino hacia el
+                    if sucesor[0] in caminos:
+                        # Si el camino ya trazado es es mayor que el camino de act + 1 se puede mejorar trazando desde act
+                        if len(caminos.get(act)) + 1 < len(caminos.get(sucesor[0])):
+                            # Se acumula el camino
+                            
+                            caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+
+                        # Si no se puede mejorar, no se cambia
+                    else:
+                        caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+    print(caminos)
+    util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
