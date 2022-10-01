@@ -132,15 +132,12 @@ def breadthFirstSearch(problem):
 
     while not cola.isEmpty():
         act = cola.pop()
-        print(act)
         if act not in vistos:
             vistos.append(act) # Lo marco como visto
             if problem.isGoalState(act):              
-                print(f'El fin: {caminos.get(act)}')
                 return caminos.get(act)
 
             for sucesor in problem.getSuccessors(act):
-                print(f'Sucesor: {sucesor}')
                 cola.push(sucesor[0])
                 # Caso Critico: Primer estado que no tiene camino todavia
                 if caminos.get(act) == None:
@@ -165,7 +162,50 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+    act = problem.getStartState() # Devuelve la coordenada inicial
+    cola = util.PriorityQueue()
+    cola.update(act, 0)
+    vistos = []
+    caminos = {}
+
+    while not cola.isEmpty():
+        # Actualizo la cola
+        #cola.update()
+        # Recojo el mas prioritario
+        act = cola.pop()
+        
+        if act not in vistos:
+            vistos.append(act) # Lo marco como visto
+            if problem.isGoalState(act):
+                return caminos.get(act)
+            
+            for sucesor in problem.getSuccessors(act):
+                
+                # Caso Critico: Primer estado que no tiene camino todavia
+                if caminos.get(act) == None:
+                    caminos[sucesor[0]] = [] + [sucesor[1]]
+                    cola.update(sucesor[0], sucesor[1])
+
+                # Caso General: Voy acumulando el camino y el coste
+                else:
+                    if sucesor[0] in caminos:
+                        # Si el camino ya trazado es es mayor que el camino de act + 1 se puede mejorar trazando desde act
+                        if len(caminos.get(act)) + 1 < len(caminos.get(sucesor[0])):
+                            # Se acumula el camino
+                            cola.update(sucesor[0], round(sucesor[2] + len(caminos.get(act))))    
+                            caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+
+                    else:
+                        cola.update(sucesor[0], round(sucesor[2] + len(caminos.get(act))))
+                        caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+
+
+    print(caminos)
+
+    
+    # update() para actualizar la cola. El primer valor de la cola siempre es el mas importante
+    # En este caso el primero es el mejor, ya que es el mas corto
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
