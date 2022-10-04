@@ -164,9 +164,10 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     act = problem.getStartState() # Devuelve la coordenada inicial
     cola = util.PriorityQueue()
-    cola.update(act, 0)
+    cola.update([act, 0], 0)
     vistos = []
     caminos = {}
+    costes = {}
 
     while not cola.isEmpty():
         # Actualizo la cola
@@ -174,38 +175,29 @@ def uniformCostSearch(problem):
         # Recojo el mas prioritario
         act = cola.pop()
         
-        if act not in vistos:
-            vistos.append(act) # Lo marco como visto
-            if problem.isGoalState(act):
-                return caminos.get(act)
+        if act[0] not in vistos:
             
-            for sucesor in problem.getSuccessors(act):
-                
+            vistos.append(act[0]) # Lo marco como visto
+            if problem.isGoalState(act[0]):
+                print(caminos)
+                return caminos.get(act[0])
+            
+            for sucesor in problem.getSuccessors(act[0]):
                 # Caso Critico: Primer estado que no tiene camino todavia
-                if caminos.get(act) == None:
+                if caminos.get(act[0]) == None:
                     caminos[sucesor[0]] = [] + [sucesor[1]]
-                    cola.update(sucesor[0], sucesor[1])
-
+                    cola.update([sucesor[0], sucesor[2]], sucesor[2])
                 # Caso General: Voy acumulando el camino y el coste
                 else:
                     if sucesor[0] in caminos:
-                        # Si el camino ya trazado es es mayor que el camino de act + 1 se puede mejorar trazando desde act
-                        if len(caminos.get(act)) + 1 < len(caminos.get(sucesor[0])):
-                            # Se acumula el camino
-                            cola.update(sucesor[0], round(sucesor[2] + len(caminos.get(act))))    
+                        if act[1] < sucesor[1]:
                             caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
-
                     else:
-                        cola.update(sucesor[0], round(sucesor[2] + len(caminos.get(act))))
-                        caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
-
-
-    print(caminos)
-
-    
-    # update() para actualizar la cola. El primer valor de la cola siempre es el mas importante
-    # En este caso el primero es el mejor, ya que es el mas corto
-
+                        caminos[sucesor[0]] = caminos.get(act[0]) + [sucesor[1]]
+                        coste_acum = act[1] + sucesor[2]
+                        #print(f'Coste acum: {coste_acum}')
+                        cola.update([sucesor[0], coste_acum], coste_acum)
+    #print(caminos)
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
