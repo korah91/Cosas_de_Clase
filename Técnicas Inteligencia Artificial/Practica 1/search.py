@@ -162,42 +162,41 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    act = problem.getStartState() # Devuelve la coordenada inicial
+    act = problem.getStartState() # Devuelve la coordenada inicial (coord)
     cola = util.PriorityQueue()
-    cola.update([act, 0], 0)
+    cola.update(act, 0)
+
     vistos = []
-    caminos = {}
-    costes = {}
+    # Cada key de caminos tiene [camino, coste]
+    caminos = {act: [None, 0]}
 
     while not cola.isEmpty():
-        # Actualizo la cola
-        #cola.update()
-        # Recojo el mas prioritario
         act = cola.pop()
+        camino_act = caminos.get(act)[0]
+        coste_act = caminos.get(act)[1]
         
-        if act[0] not in vistos:
+        if act not in vistos:
+            vistos.append(act)
+            if problem.isGoalState(act):
+                return caminos.get(act)[0]
             
-            vistos.append(act[0]) # Lo marco como visto
-            if problem.isGoalState(act[0]):
-                print(caminos)
-                return caminos.get(act[0])
-            
-            for sucesor in problem.getSuccessors(act[0]):
-                # Caso Critico: Primer estado que no tiene camino todavia
-                if caminos.get(act[0]) == None:
-                    caminos[sucesor[0]] = [] + [sucesor[1]]
-                    cola.update([sucesor[0], sucesor[2]], sucesor[2])
-                # Caso General: Voy acumulando el camino y el coste
+            for s in problem.getSuccessors(act):
+                # Si ya lo he añadido a caminos puedo optimizarlo o no              
+                camino_s = [s[1]]
+                coste_acum = coste_act + s[2]
+                
+                if camino_act == None:
+                    caminos[s[0]] = [] + camino_s, coste_acum
+                    cola.update(s[0], coste_acum)
                 else:
-                    if sucesor[0] in caminos:
-                        if act[1] < sucesor[1]:
-                            caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+                    if s[0] in caminos:
+                        if coste_acum < caminos.get(s[0])[1]:
+                            # Reemplazo
+                            caminos[s[0]] = camino_act + camino_s, coste_acum
+                            cola.update(s[0], coste_acum)
                     else:
-                        caminos[sucesor[0]] = caminos.get(act[0]) + [sucesor[1]]
-                        coste_acum = act[1] + sucesor[2]
-                        #print(f'Coste acum: {coste_acum}')
-                        cola.update([sucesor[0], coste_acum], coste_acum)
-    #print(caminos)
+                        caminos[s[0]] = camino_act + camino_s, coste_acum
+                        cola.update(s[0], coste_acum)
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -209,7 +208,41 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    act = problem.getStartState()
+    cola = util.PriorityQueue()
+
+    # Meto en la cola el primero junto con la prioridad calculada con el heuristico
+    cola.update(act, heuristic(act, problem))
+    vistos = []
+    # Cada key de caminos tiene [camino, coste]
+    caminos = {act: [None, heuristic(act, problem)]}
+    
+    while not cola.isEmpty():
+        act = cola.pop()
+        camino_act = caminos.get(act)[0]
+        coste_act = caminos.get(act)[1]
+
+        if act not in vistos:
+            vistos.append(act)
+            if problem.isGoalState(act):
+                return caminos.get(act)[0]
+
+            for s in problem.getSuccessors(act):
+                camino_s = [s[1]]
+                coste_acum = coste_act + heuristic(s[0], problem) + s[2]
+
+                if camino_act == None:
+                    caminos[s[0]] = [] + camino_s, coste_acum
+                    cola.update(s[0], coste_acum)
+                else:
+                    if s[0] in caminos:
+                        if coste_acum < caminos.get(s[0])[1]:
+                            # Reemplazo
+                            caminos[s[0]] = camino_act + camino_s, coste_acum
+                            cola.update(s[0], coste_acum)
+                    else:
+                        caminos[s[0]] = camino_act + camino_s, coste_acum
+                        cola.update(s[0], coste_acum)
     util.raiseNotDefined()
 
 
