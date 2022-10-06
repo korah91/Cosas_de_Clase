@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python DeepFirstSearch",
+            "name": "Python A Star",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/Técnicas Inteligencia Artificial/Practica 1/autograder.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "args": ["-q", "q3"]
         }
     ]
 }

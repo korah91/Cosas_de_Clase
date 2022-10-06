@@ -212,10 +212,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     cola = util.PriorityQueue()
 
     # Meto en la cola el primero junto con la prioridad calculada con el heuristico
-    cola.update(act, heuristic(act, problem))
+    cola.update(act, 0)
     vistos = []
     # Cada key de caminos tiene [camino, coste]
-    caminos = {act: [None, heuristic(act, problem)]}
+    caminos = {act: [None, 0]}
     
     while not cola.isEmpty():
         act = cola.pop()
@@ -229,20 +229,55 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
             for s in problem.getSuccessors(act):
                 camino_s = [s[1]]
-                coste_acum = coste_act + heuristic(s[0], problem) + s[2]
-
+                
                 if camino_act == None:
-                    caminos[s[0]] = [] + camino_s, coste_acum
-                    cola.update(s[0], coste_acum)
+                    caminos[s[0]] = [] + camino_s, s[2]
+                    prio = s[2] + heuristic(s[0], problem)
+                    cola.update(s[0], prio)
                 else:
                     if s[0] in caminos:
-                        if coste_acum < caminos.get(s[0])[1]:
+                        if coste_act + s[2] < caminos.get(s[0])[1]:
                             # Reemplazo
-                            caminos[s[0]] = camino_act + camino_s, coste_acum
-                            cola.update(s[0], coste_acum)
+                            caminos[s[0]] = camino_act + camino_s, coste_act + s[2]
+                            prio = coste_act + s[2] + heuristic(s[0], problem)
+                            cola.update(s[0], prio)
                     else:
-                        caminos[s[0]] = camino_act + camino_s, coste_acum
-                        cola.update(s[0], coste_acum)
+                        caminos[s[0]] = camino_act + camino_s, coste_act + s[2]
+                        prio = coste_act + s[2] + heuristic(s[0], problem)
+                        cola.update(s[0], prio)
+    '''dir = {problem.getStartState(): [None, 0]}
+    queue = util.PriorityQueue()
+    lista = []
+    queue.push(problem.getStartState(), 0)
+
+    while not queue.isEmpty():
+        state = queue.pop()
+        if problem.isGoalState(state):
+            return list(dir[state][0])
+        if state not in lista:
+            lista.append(state)
+            for s in problem.getSuccessors(state):
+                if dir[state][0] is None:
+                    dir[s[0]] = [[s[1]], s[2]]
+                    prio = s[2] + heuristic(s[0], problem)
+                    queue.push(s[0], prio)
+                elif s[0] in dir and dir[s[0]] is not None:
+                    if dir[state][1] + s[2] < dir[s[0]][1]:
+                        n_dic1 = dir[state][0].copy()
+                        n_dic2 = dir[state][1]
+                        n_dic1.append(s[1])
+                        n_dic2 += s[2]
+                        dir[s[0]] = [n_dic1, n_dic2]
+                        prio = n_dic2 + heuristic(s[0], problem)
+                        queue.update(s[0], prio)
+                else:
+                    n_dic1 = dir[state][0].copy()
+                    n_dic2 = dir[state][1]
+                    n_dic1.append(s[1])
+                    n_dic2 += s[2]
+                    dir[s[0]] = [n_dic1, n_dic2]
+                    prio = n_dic2 + heuristic(s[0], problem)
+                    queue.push(s[0], prio)'''
     util.raiseNotDefined()
 
 
