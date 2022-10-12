@@ -81,122 +81,107 @@ def depthFirstSearch(problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
+
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
 
-    from game import Directions
-
-    if(problem.isGoalState(problem.getStartState())):
-        return problem.getStartState()
-
-    act = problem.getStartState() # Devuelve la coordenada inicial
+    dir = {problem.getStartState(): None}
     stack = util.Stack()
-    stack.push(act)
-    vistos = []
-    caminos = {}
-    camino_final = []
+    lista = []
+    stack.push(problem.getStartState())
 
     while not stack.isEmpty():
-        act = stack.pop()
-
-        if act not in vistos:
-            vistos.append(act) # Lo marco como visto
-            if problem.isGoalState(act):              
-                camino_final = caminos.get(act)
-                print(camino_final)
-                return camino_final
-
-            for sucesor in problem.getSuccessors(act):
-                stack.push(sucesor[0])
-                # Caso Critico: Primer estado que no tiene camino todavia
-                if caminos.get(act) == None:
-                    caminos[sucesor[0]] = [] + [sucesor[1]]
-                # Caso General: Voy acumulando el camino
+        state = stack.pop()
+        if problem.isGoalState(state):
+            return list(dir[state])
+        if state not in lista:
+            lista.append(state)
+            for s in problem.getSuccessors(state):
+                if dir[state] is None:
+                    dir[s[0]] = [s[1]]
                 else:
-                    caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
-    
-    return False
-
-
+                    n_dic = dir[state].copy()
+                    n_dic.append(s[1])
+                    dir[s[0]] = n_dic
+                stack.push(s[0])
+    return []
+    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
 
-    if(problem.isGoalState(problem.getStartState())):
-        return problem.getStartState()
 
-    act = problem.getStartState() # Devuelve la coordenada inicial
-    cola = util.Queue()
-    cola.push(act)
-    vistos = []
-    caminos = {}
+    dir = {problem.getStartState(): None}
+    queue = util.Queue()
+    lista = []
+    queue.push(problem.getStartState())
 
-    while not cola.isEmpty():
-        act = cola.pop()
-        if act not in vistos:
-            vistos.append(act) # Lo marco como visto
-            if problem.isGoalState(act):              
-                return caminos.get(act)
-
-            for sucesor in problem.getSuccessors(act):
-                cola.push(sucesor[0])
-                # Caso Critico: Primer estado que no tiene camino todavia
-                if caminos.get(act) == None:
-                    caminos[sucesor[0]] = [] + [sucesor[1]]
-
-                # Caso General: Voy acumulando el camino
+    while not queue.isEmpty():
+        state = queue.pop()
+        if problem.isGoalState(state):
+            print(state)
+            return list(dir[state])
+        if state not in lista:
+            lista.append(state)
+            for s in problem.getSuccessors(state):
+                if dir[state] is None:
+                    dir[s[0]] = [s[1]]
+                elif s[0] in dir and dir[s[0]] is not None:
+                    if len(dir[state]) < len(dir[s[0]]):
+                        n_dic1 = dir[state].copy()
+                        n_dic1.append(s[1])
+                        dir[s[0]] = n_dic1
                 else:
-                    # Para conseguir el camino más corto voy mejorando el camino a seguir para llegar a un estado
-                    # Si el sucesor ya esta en caminos ya he trazado un camino hacia el
-                    if sucesor[0] in caminos:
-                        # Si el camino ya trazado es es mayor que el camino de act + 1 se puede mejorar trazando desde act
-                        if len(caminos.get(act)) + 1 < len(caminos.get(sucesor[0])):
-                            # Se acumula el camino
-                            
-                            caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
+                    n_dic1 = dir[state].copy()
+                    n_dic1.append(s[1])
 
-                        # Si no se puede mejorar, no se cambia
-                    else:
-                        caminos[sucesor[0]] = caminos.get(act) + [sucesor[1]]
-    print(caminos)
+                    dir[s[0]] = n_dic1
+
+                queue.push(s[0])
+    return []
+
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    act = problem.getStartState() # Devuelve la coordenada inicial (coord)
-    cola = util.PriorityQueue()
-    cola.update(act, 0)
 
-    vistos = []
-    # Cada key de caminos tiene [camino, coste]
-    caminos = {act: [None, 0]}
+    dir = {problem.getStartState(): [None, 0]}
+    queue = util.PriorityQueue()
+    lista = []
+    queue.push(problem.getStartState(), 0)
 
-    while not cola.isEmpty():
-        act = cola.pop()
-        camino_act = caminos.get(act)[0]
-        coste_act = caminos.get(act)[1]
-        
-        if act not in vistos:
-            vistos.append(act)
-            if problem.isGoalState(act):
-                return caminos.get(act)[0]
-            
-            for s in problem.getSuccessors(act):
-                # Si ya lo he añadido a caminos puedo optimizarlo o no              
-                camino_s = [s[1]]
-                coste_acum = coste_act + s[2]
-                
-                if camino_act == None:
-                    caminos[s[0]] = [] + camino_s, coste_acum
-                    cola.update(s[0], coste_acum)
+    while not queue.isEmpty():
+        state = queue.pop()
+        if problem.isGoalState(state):
+            return list(dir[state][0])
+        if state not in lista:
+            lista.append(state)
+            for s in problem.getSuccessors(state):
+                if dir[state][0] is None:
+                    dir[s[0]] = [[s[1]], s[2]]
+                    prio = s[2]
+                elif s[0] in dir and dir[s[0]] is not None:
+                    if dir[state][1] + s[2] < dir[s[0]][1]:
+                        n_dic1 = dir[state][0].copy()
+                        n_dic2 = dir[state][1]
+                        n_dic1.append(s[1])
+                        n_dic2 += s[2]
+                        dir[s[0]] = [n_dic1, n_dic2]
+                        prio = n_dic2
                 else:
-                    if s[0] in caminos:
-                        if coste_acum < caminos.get(s[0])[1]:
-                            # Reemplazo
-                            caminos[s[0]] = camino_act + camino_s, coste_acum
-                            cola.update(s[0], coste_acum)
-                    else:
-                        caminos[s[0]] = camino_act + camino_s, coste_acum
-                        cola.update(s[0], coste_acum)
+                    n_dic1 = dir[state][0].copy()
+                    n_dic2 = dir[state][1]
+                    n_dic1.append(s[1])
+                    n_dic2 += s[2]
+                    dir[s[0]] = [n_dic1, n_dic2]
+                    prio = n_dic2
+
+                queue.push(s[0], prio)
+
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -208,44 +193,7 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    act = problem.getStartState()
-    cola = util.PriorityQueue()
-
-    # Meto en la cola el primero junto con la prioridad calculada con el heuristico
-    cola.update(act, 0)
-    vistos = []
-    # Cada key de caminos tiene [camino, coste]
-    caminos = {act: [None, 0]}
-    
-    while not cola.isEmpty():
-        act = cola.pop()
-        camino_act = caminos.get(act)[0]
-        coste_act = caminos.get(act)[1]
-
-        if act not in vistos:
-            vistos.append(act)
-            if problem.isGoalState(act):
-                return caminos.get(act)[0]
-
-            for s in problem.getSuccessors(act):
-                camino_s = [s[1]]
-                
-                if camino_act == None:
-                    caminos[s[0]] = [] + camino_s, s[2]
-                    prio = s[2] + heuristic(s[0], problem)
-                    cola.update(s[0], prio)
-                else:
-                    if s[0] in caminos:
-                        if coste_act + s[2] < caminos.get(s[0])[1]:
-                            # Reemplazo
-                            caminos[s[0]] = camino_act + camino_s, coste_act + s[2]
-                            prio = coste_act + s[2] + heuristic(s[0], problem)
-                            cola.update(s[0], prio)
-                    else:
-                        caminos[s[0]] = camino_act + camino_s, coste_act + s[2]
-                        prio = coste_act + s[2] + heuristic(s[0], problem)
-                        cola.update(s[0], prio)
-    '''dir = {problem.getStartState(): [None, 0]}
+    dir = {problem.getStartState(): [None, 0]}
     queue = util.PriorityQueue()
     lista = []
     queue.push(problem.getStartState(), 0)
@@ -277,7 +225,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     n_dic2 += s[2]
                     dir[s[0]] = [n_dic1, n_dic2]
                     prio = n_dic2 + heuristic(s[0], problem)
-                    queue.push(s[0], prio)'''
+                    queue.push(s[0], prio)
+
+
+
+
     util.raiseNotDefined()
 
 
