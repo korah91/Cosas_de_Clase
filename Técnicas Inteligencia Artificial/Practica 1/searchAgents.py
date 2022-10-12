@@ -314,8 +314,10 @@ class CornersProblem(search.SearchProblem):
         """
         Returns whether this search state is a goal state of the problem.
         """
+        # Si no quedan esquinas por recorrer hemos llegado al objetivo
         if not state[1]:
             return True
+        # Si queda al menos una esquina por recorrer tenemos que seguir buscando
         else:
             return False
         util.raiseNotDefined()
@@ -340,9 +342,12 @@ class CornersProblem(search.SearchProblem):
 
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
+            # Si no choca contra la pared
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 visited = []
+                # Si el siguiente estado no es una esquina que falte por recorrer no se borra ninguna esquina de state[1]
+                # En el caso contrario, se borra la esquina de state[1]
                 for corner in state[1]:
                     if not nextState == corner:
                         visited.append(corner)
@@ -404,19 +409,24 @@ def cornersHeuristic(state, problem):
     res = get_shortest(pos_inic, corners, 0)
     return res
     """
-
+    # Solo tenemos en cuenta las esquinas que falten por recorrer
     corners = list(state[1])
     pos = state[0]
     dist_total = 0
 
     while corners:
         sortest = (None, 100000)
+        # Se calcula la distancia desde el estado actual hasta cada esquina
         for corner in corners:
             dist = util.manhattanDistance(pos, corner)
             if dist < sortest[1]:
                 sortest = (corner, dist)
+        
+        # Se borra la esquina mas cercana para poder evaluar las otras
         corners.remove(sortest[0])
+        # Se va acumulando el coste
         dist_total += sortest[1]
+        # Se actualiza la posición desde la que mirar en la siguiente iteración
         pos = sortest[0]
 
     return dist_total
