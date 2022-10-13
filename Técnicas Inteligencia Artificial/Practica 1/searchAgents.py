@@ -416,7 +416,7 @@ def cornersHeuristic(state, problem):
 
     while corners:
         sortest = (None, 100000)
-        # Se calcula la distancia desde el estado actual hasta cada esquina
+        # Se calcula la distancia desde el estado actual hasta la esquina más cercana
         for corner in corners:
             dist = util.manhattanDistance(pos, corner)
             if dist < sortest[1]:
