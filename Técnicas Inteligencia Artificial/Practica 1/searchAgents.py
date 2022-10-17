@@ -430,7 +430,6 @@ def cornersHeuristic(state, problem):
         pos = sortest[0]
 
     return dist_total
-    return 0
 
 
 class AStarCornersAgent(SearchAgent):
