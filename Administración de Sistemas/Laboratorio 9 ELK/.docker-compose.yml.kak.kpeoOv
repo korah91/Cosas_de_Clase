@@ -1,0 +1,22 @@
+services:
+    elasticsearch:
+        container_name: kibana
+        ports:
+            - 80:5601
+            depends_on:
+                - elasticsearch
+                volumes:
+                    # Configuración de volumenes
+        # Configuracion elasticsearch
+    logstash:
+        # Configuracion logstash
+    kibana:
+        image: docker.elastic.co/kibana/kibana:8.5.2
+        container_name: kibana
+        ports:
+            - 80:5601
+        depends_on:
+            - elasticsearch
+volumes:
+    # Configuración de volumenes
+    data01:
