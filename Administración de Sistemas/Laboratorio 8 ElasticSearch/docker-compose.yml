@@ -4,10 +4,13 @@ services:
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false # Para que no pida certificado
+
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
       - 9300:9300
+  
 volumes:
   data01:
