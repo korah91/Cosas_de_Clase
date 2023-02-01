@@ -1,0 +1,9 @@
+main, article, aside, footer{
+    border: 1px solid #000;
+}
+main section article h1{
+    color:aqua;
+}
+h1 {
+    color:aqua
+}
