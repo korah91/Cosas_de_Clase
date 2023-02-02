@@ -1,0 +1,23 @@
+* {
+    box-sizing: border-box;
+}
+.columna {
+    float:left;
+}
+
+.izq {
+    width: 50%;
+    background-color: rgb(196, 196, 196);
+}
+
+.der{
+    width:50%;
+    background-color: antiquewhite;
+}
+
+main, article, aside, footer{
+    border: 1px solid #000;
+}
+.row{
+    display: flex;
+}
