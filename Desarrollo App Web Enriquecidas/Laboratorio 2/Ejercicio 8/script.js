@@ -42,3 +42,17 @@ img.height = 300
 img.width = 300
 src.appendChild(img)
 
+// Ejercicio 7
+d = document.getElementsByClassName("footer-container")[0]
+d.insertAdjacentHTML("beforebegin", '<img src="https://dialprix.es/blog/wp-content/uploads/calabaza.jpg" width="300" height="300" style="display:block; margin-left:auto; margin-right:auto;">')
+
+// Ejercicio 8
+const ej8 = () => {
+    str = "1"
+    for (let i = 2; i++; i<100){
+        str += ","+i
+    }
+    console.log(str)
+    document.write(str)
+}
+ej8()
