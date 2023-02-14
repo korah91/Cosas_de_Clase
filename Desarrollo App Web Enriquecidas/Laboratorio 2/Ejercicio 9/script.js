@@ -56,3 +56,8 @@ function ej8(){
     console.log(str)
 }
 ej8()
+
+// Ejercicio 9
+nDiv = document.getElementsByTagName("div").length
+alert("Hay "+nDiv+ " divs")
+

@@ -56,3 +56,15 @@ function ej8(){
     console.log(str)
 }
 ej8()
+
+// Ejercicio 9
+nDiv = document.getElementsByTagName("div").length
+alert("Hay "+nDiv+ " divs")
+
+// Ejercicio 10
+var funcionDado = function(){
+    return 1 + Math.floor(Math.random() * 6);
+}
+for(let i = 1; i <= 10; i++){
+    console.warn("Tirada: "+ i + " Resultado: " + funcionDado())
+}
