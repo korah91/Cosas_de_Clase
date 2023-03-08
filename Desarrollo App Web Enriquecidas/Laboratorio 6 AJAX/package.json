@@ -1,0 +1,16 @@
+{
+  "name": "laboratorio-4-gestores-de-eventos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "require": "^2.4.20",
+    "serve": "^14.2.0"
+  }
+}
