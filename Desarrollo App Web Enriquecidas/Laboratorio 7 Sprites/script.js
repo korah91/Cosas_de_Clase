@@ -22,29 +22,29 @@ window.onload = function() {
     document.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "ArrowDown":
-            y = y+15
+            y = y+10
             break;
         case "ArrowUp":
-            y = y-15
+            y = y-10
             break;
         case "ArrowLeft":
-            x = x-15
+            x = x-10
             break;
         case "ArrowRight":
-            x = x+15
+            x = x+10
             break;
       }
       
       // La lupa no se puede salir de los bordes de la imagen
-      if (x > img.width - canvasZoom.width  + 27) {
-        x = img.width - canvasZoom.width;
+      if (x > img.width - canvasZoom.width/2  ) {
+        x = img.width - canvasZoom.width/2;
         console.log(x, img.width)
       }
       if (x < 0) {
         x = 0;
       }
-      if (y > img.height - canvasZoom.height) {
-        y = img.height - canvasZoom.height;
+      if (y > img.height - canvasZoom.height/2) {
+        y = img.height - canvasZoom.height/2;
       }
       if (y < 0) {
         y = 0;
@@ -54,22 +54,27 @@ window.onload = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, 0, 0)
 
-      // Se crea la lupa
-      ctxZoom.fillStyle = "white"
-      ctxZoom.fillRect(0,0, canvasZoom.width, canvasZoom.height);
 
+      ctxZoom.fillStyle = "white"
+      ctxZoom.fillRect(x, y, canvasZoom.width, canvasZoom.height);
       // drawImage(imagen, sourceX, sourceY, sourceWidth, sourceHeigth, destinationX, destinationY, destinationWidth, destinationHeight)
       // destinationWidth y Height redimensiona la imagen al doble de la original
-      ctxZoom.drawImage(canvas, x, y, 50, 50, 0, 0, 100,100);
+      ctxZoom.drawImage(canvas, x, y, 50, 50, 0, 0, 100, 100);
+
+      // Despues de dibujar la lupa dibujo en el canvas sus coordenadas
+      ctx.font = "bold 9px sans-serif";
+      ctx.fillText(`( ${x}, ${y} )`, 430, 10);
+
+
 
 
       // Se dibuja el delimitador del recinto seleccionado
       ctx.beginPath()
       ctx.moveTo(x, y)
       ctx.lineTo(x, y)
-      ctx.lineTo(x + canvasZoom.width, y)
-      ctx.lineTo(x + canvasZoom.width, y + canvasZoom.height)
-      ctx.lineTo(x, y + canvasZoom.height)      
+      ctx.lineTo(x + canvasZoom.width/2, y)
+      ctx.lineTo(x + canvasZoom.width/2, y + canvasZoom.height/2)
+      ctx.lineTo(x, y + canvasZoom.height/2)      
       ctx.closePath()
       ctx.lineWidth = 3
       ctx.strokeStyle = "green"
@@ -79,7 +84,9 @@ window.onload = function() {
       canvasZoom.style.left = x  + "px"
       canvasZoom.style.top = y  + "px"
       
-      
+    
+
+
       console.log("("+canvasZoom.style.left + ", " +canvasZoom.style.top+")")
       canvasZoom.style.display = "block";
 
