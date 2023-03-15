@@ -113,7 +113,7 @@ function procesarFrame(e) {
 		buffer.translate(bufferCanvas.width/2, bufferCanvas.height/2);
 			
 		// Rotate 1 degree
-		buffer.rotate(Math.PI / 180 *(ang += 1));
+		buffer.rotate(Math.PI / 180 * (ang += 1));
 		ang+=1
 		// Move registration point back to the top left corner of canvas
 		buffer.translate(-bufferCanvas.width/2, -bufferCanvas.width/2);
@@ -175,24 +175,3 @@ function loadAudio(url) {
 	});
 }
 
-function rotate() {
-	var canvas = document.getElementById("display");
-
-	context = canvas.getContext("2d")
-	// Clear the canvas
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	  
-	// Move registration point to the center of the canvas
-	context.translate(canvas.width/2, canvas.height/2);
-	  
-	// Rotate 1 degree
-	context.rotate(Math.PI / 180);
-	  
-	// Move registration point back to the top left corner of canvas
-	context.translate(-canvas.width/2, -canvas.width/2);
-	  
-
-	setInterval(rotate, 100);
-  }
-  
-  
