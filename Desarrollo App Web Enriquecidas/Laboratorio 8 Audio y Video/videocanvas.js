@@ -5,20 +5,6 @@ var ang = 1;
 
 window.onload = function() {
 
-
-	loadAudio("audio/soundtrack.mp3").then( audio => audio.play());
-
-	
-
-
-
-
-
-
-
-
-
-
 	var video = document.getElementById("video");
 	var botonByN = document.getElementById("byn");
 	botonByN.onclick = cambiarEfecto;
@@ -57,6 +43,27 @@ window.onload = function() {
 		rotar = true;
 	}
 
+	// BOTON AUDIO 
+	var botonAudio = document.getElementById("audiobtn");
+	botonAudio.onclick = () => {
+		loadAudio("audio/soundtrack.mp3").then( audio => audio.play());
+	}
+
+	// BOTON PIP
+	var botonPip = document.getElementById("pip");
+	botonPip.onclick = () => {
+		botonPip.disabled = true;
+		try {
+			video.requestPictureInPicture();
+		} 
+		catch (error) {
+			console.log(error)
+		} 
+		finally {
+			botonPip.disabled = false;
+		}
+		
+	}
 
 }
 

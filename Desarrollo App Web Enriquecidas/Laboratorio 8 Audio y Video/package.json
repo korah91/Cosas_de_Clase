@@ -2,10 +2,13 @@
   "name": "laboratorio-8-audio-y-video",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "videocanvas.html",
   "scripts": {
     "start": "serve ."
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
 }
