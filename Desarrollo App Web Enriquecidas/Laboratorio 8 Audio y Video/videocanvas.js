@@ -176,7 +176,6 @@ function loadAudio(url) {
 	return new Promise(resolve => {
 		const audio = new Audio(url);
 		audio.addEventListener('loadeddata', () => {
-			console.log("a")
 			resolve(audio);
 		});
 	});
