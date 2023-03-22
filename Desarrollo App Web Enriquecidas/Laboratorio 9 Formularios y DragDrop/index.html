@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>Formularios y Drag&Drop</title>
+<meta charset="utf-8">
+<script src="script.js"></script>
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+<form>
+    <fieldset>
+        <legend>Datos del cliente</legend>
+        Nombre: <input id="nombre" type="text" autofocus placeholder="Introduce tu nombre">
+        <div id="nomAlerta"></div>
+        Teléfono: <input id="telefono" type="tel" placeholder="Patrón 123-456-789">
+        <div id="tlfAlerta"></div>
+        E-mail: <input id="correo" type="email" placeholder="Introduce tu dirección de correo electrónico">
+        <div id="correoAlerta"></div>
+
+    </fieldset>
+    <fieldset>
+        <legend>Libros</legend>
+        <input id="libros" type="text" list="Libros">
+        Cantidad (Máx 5): <input item id="cantidad" type="number" min="1" max="5" id="">
+        <div id="librosAlerta"></div>
+        <div id="cantidadAlerta"></div>
+    </fieldset>
+    <fieldset>
+        <legend>File Upload</legend>
+        Elige los ficheros a subir: <input id="fileselect" type="file" multiple>
+
+        <div id="dropbox">Arrastra aquí tus ficheros</div>
+    </fieldset>
+    <input type="button" id="enviar" value="Enviar" onclick="validarFormulario()">
+</form>
+
+
+
+<datalist id="Libros">
+    <option value="Libro1">
+    <option value="Libro2">
+    <option value="Libro3">
+    <option value="Libro4">
+    <option value="Libro5">
+</datalist>
+
+<div id="mensajes"><p>Mensajes de estado</p></div>
+<script src="script.js"></script>
+
+
+</body>
+</html>
