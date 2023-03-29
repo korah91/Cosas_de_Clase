@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>Formularios y Drag&Drop</title>
+<meta charset="utf-8">
+<script src="script.js"></script>
+<link rel="stylesheet" href="styles.css">
+
+<%- include('partials/headers.ejs') %>
+
+<h1>
+    <%=title %>
+</h1>
+
+Hi there!
+<ul>
+    <% users.forEach(function(user) { %>
+        <li> <%=user.first_name %> <%=user.last_name %> - <a href="#" class="deleteUser" data-id="<%= user._id %>">Delete</a> </li>
+    <% }) %>
+</ul>
+
+<h1>Insertar Cliente</h1>
+
+<form method="POST" action="/users/add" id="form"> 
+    <label>Nombre</label>
+	<input type="text" name="first_name">
+	<br>
+	<label>Apellido</label>
+	<input type="text" name="last_name">
+	<br>
+	<label>Email</label>
+	<input type="text" name="email">
+	<br>
+	<input type="submit" Value="Enviar" name="submit">
+</form>
+
+<ul>
+	<% if (errors) { %>
+	<% errors.forEach( function(error){  %>
+    	<li><%=error.msg %></li>
+	<% }) %>
+	<% } %>
+    
+</ul>
+
+
+<%- include('partials/footer.ejs') %>
+
+
+</body>
+<script src="script.js"></script>
+</html>
