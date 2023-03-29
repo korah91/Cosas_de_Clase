@@ -32,7 +32,11 @@ function deleteUser(event){
 
 function editUser(event){
     
+
+    // Se cambia el boton a Edit
     document.getElementsByName("submit").value = "Edit"
+
+    document.getEle
 
     var url = '/users/edit/' + event.target.getAttribute('data-id');
     var consulta = new XMLHttpRequest();

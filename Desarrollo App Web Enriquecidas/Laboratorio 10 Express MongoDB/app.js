@@ -40,6 +40,8 @@ app.use(express.urlencoded({extended: false}));
 // Middleware que carga ficheros estaticos de un directorio (public en este caso)
 app.use(express.static(path.join(__dirname, "public")));
 
+
+// Anadir usuario
 app.post('/users/add', 
 	[
 	check("first_name", "El nombre es obligatorio").notEmpty(),
@@ -83,10 +85,10 @@ app.post('/users/add',
 // Se ejecuta cuando se manda DELETE a /users/delete
 app.delete('/users/delete/:id', function(req, res) {
     db.users.remove({_id: ObjectId(req.params.id)}, function(err, result) {
-   	 if(err) {
-   		 console.log(err);
-   	 }
-   	 res.redirect(303, '/');
+	if(err) {
+		console.log(err);
+	}
+	res.redirect(303, '/');
     });
 });
 
