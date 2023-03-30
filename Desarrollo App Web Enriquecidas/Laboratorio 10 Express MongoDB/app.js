@@ -82,6 +82,17 @@ app.post('/users/add',
 	}
 });
 
+app.get('/users/getUser/:id', function(req, res) {
+	db.users.findOne({
+		_id: ObjectId(req.params.id)
+	}, function(err, result) {
+		if(err){
+			console.log(err);
+		}
+		res.send(result)
+	})
+})
+
 // Se ejecuta cuando se manda DELETE a /users/delete
 app.delete('/users/delete/:id', function(req, res) {
     db.users.remove({_id: ObjectId(req.params.id)}, function(err, result) {
@@ -100,17 +111,17 @@ app.delete('/users/delete/:id', function(req, res) {
 app.get("/", function(req, res) {  // peticion y respuesta como parametros
     // para rellenar la plantilla
 	db.users.find(function(err, docs) {
-   	 if(err) {
-   		 console.log(err);
-   	 } else {
-   		 console.log(docs); // lo que mongodb nos devuelva
-   		 // para rellenar la plantilla
-   		 res.render('index', {
-   		    title: 'clientes',
-   		    users: docs // cambiamos users por docs
-   		 });
+	if(err) {
+		console.log(err);
+	} else {
+		console.log(docs); // lo que mongodb nos devuelva
+		// para rellenar la plantilla
+		res.render('index', {
+		title: 'clientes',
+		users: docs // cambiamos users por docs
+		});
 	}
-         });
+		});
 });
 
 

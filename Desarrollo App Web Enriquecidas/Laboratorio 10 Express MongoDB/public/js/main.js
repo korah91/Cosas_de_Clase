@@ -14,16 +14,18 @@ window.onload = function() {
 function deleteUser(event){
     var confirmation = confirm('Are You Sure?');
     if(confirmation){
-   	 var url = '/users/delete/' + event.target.getAttribute('data-id');
-   	 var consulta = new XMLHttpRequest();
-   	 consulta.open("DELETE", url);
-   	 consulta.onload = function() {
-   		 if (consulta.status == 200) {
-   			 window.location.replace('/')
-   		 }
-   	 };
+        var url = '/users/delete/' + event.target.getAttribute('data-id');
+        var consulta = new XMLHttpRequest();
+        consulta.open("DELETE", url);
+        consulta.onload = function() {
+            if (consulta.status == 200) {
+                window.location.replace('/')
+            }
+   	};
    	 consulta.send();
-    } else {
+    } 
+    
+    else {
    	 return false;
     }
 }
@@ -34,20 +36,17 @@ function editUser(event){
     
 
     // Se cambia el boton a Edit
-    document.getElementsByName("submit").value = "Edit"
+    document.getElementsByName("submit")[0].value = "Edit"
 
-    document.getEle
+    
 
-    var url = '/users/edit/' + event.target.getAttribute('data-id');
-    var consulta = new XMLHttpRequest();
-    consulta.open("GET", url);
-    consulta.onload = function() {
-        if (consulta.status == 200) {
-            window.location.replace('/')
-        }
-    };
-    consulta.send();
-    } else {
-   	 return false;
-    }
+    var url = '/users/getUser/' + event.target.getAttribute('data-id');
+    
+    fetch(url).then( (response) => {
+        return response.json()
+    }).then( (respuesta) => {
+        document.getElementsByClassName("first_name")[0].value = respuesta['first_name']
+    } )
+
+
 }
