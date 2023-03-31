@@ -82,6 +82,7 @@ app.post('/users/add',
 	}
 });
 
+// Se ejecuta cuando se manda GET a /users/getUser
 app.get('/users/getUser/:id', function(req, res) {
 	db.users.findOne({
 		_id: ObjectId(req.params.id)
@@ -91,6 +92,43 @@ app.get('/users/getUser/:id', function(req, res) {
 		}
 		res.send(result)
 	})
+})
+
+// Se ejecuta cuando se manda UPDATE a /users/updateUser/
+app.post('/users/updateUser/:id', [
+	check("first_name", "El nombre es obligatorio").notEmpty(),
+    check("last_name", "El apellido es obligatorio").notEmpty(),
+    check("email", "El email es obligatorio").notEmpty()
+
+	], 
+	function(req, res){
+		console.log("a")
+		const errors = validationResult(req); // obtenemos los posibles errores
+		if (!errors.isEmpty()) { // en caso de que el array de errores contenga algun error
+			res.render('index', {
+				title:'clientes',
+				users: users,
+				errors: errors.array()
+			});
+		} 
+		else {
+			db.users.findAndModify({
+				// Busca el cliente con el mismo id exacto
+				query: 
+					{ _id: ObjectId(req.params.id) },
+				// Lo actualiza
+				update: 
+					{ $set: { 'first_name': req.body.first_name } }
+				}, 
+				function(err, result) {
+					if(err){
+						console.log(err)
+					}
+					res.redirect("/")
+				}
+			) 
+		}
+	
 })
 
 // Se ejecuta cuando se manda DELETE a /users/delete

@@ -9,6 +9,10 @@ window.onload = function() {
     for (let item of links) {
     	item.addEventListener("click", editUser);
     }
+
+    // Boton para guardar cambios de un elemento
+    btn_edit = document.getElementsByName('submit')[0]
+    btn_edit.addEventListener('click', guardarCambios);
 }
 
 function deleteUser(event){
@@ -30,8 +34,8 @@ function deleteUser(event){
     }
 }
 
-
-
+id_usuario = 0
+// Se ejecuta cuando se pulsa Edit sobre un elemento
 function editUser(event){
     
 
@@ -45,8 +49,38 @@ function editUser(event){
     fetch(url).then( (response) => {
         return response.json()
     }).then( (respuesta) => {
-        document.getElementsByClassName("first_name")[0].value = respuesta['first_name']
+        // Guardo el id para utilizarlo luego
+        id_usuario = respuesta['_id']
+
+        // Reemplazo el texto de los input
+        document.getElementsByName("first_name")[0].value = respuesta['first_name']
+        document.getElementsByName("last_name")[0].value = respuesta['last_name']
+        document.getElementsByName("email")[0].value = respuesta['email']
     } )
+}
 
+// Se usa para guardar los cambios
+function guardarCambios(event) {
+    if (event.target.value == 'Edit'){
+        event.preventDefault();
+        var usuario = {
+            'first_name': document.getElementsByName("first_name")[0].value,
+            'last_name': document.getElementsByName("last_name")[0].value,
+            'email': document.getElementsByName("email")[0].value
+        }
 
+        var url = '/users/updateUser/' + id_usuario;
+        
+        console.log("Se ha pulsado el botón edit: "+url)
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: {
+                'usuario': usuario
+            }
+        }).then(console.log(usuario))
+    }
 }
