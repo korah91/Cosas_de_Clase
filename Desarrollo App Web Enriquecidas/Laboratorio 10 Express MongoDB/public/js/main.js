@@ -71,16 +71,19 @@ function guardarCambios(event) {
 
         var url = '/users/updateUser/' + id_usuario;
         
-        console.log("Se ha pulsado el botón edit: "+url)
+        console.log("Se ha pulsado el botón edit. Se manda el siguiente usuario a app.js "+url)
 
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {
+            // Hay que pasarlo a String primero. El JSON empieza con la key 'usuario', no empieza con
+            // first_name, last_name o email
+            body: JSON.stringify({
                 'usuario': usuario
-            }
+            })
         }).then(console.log(usuario))
+        
     }
 }

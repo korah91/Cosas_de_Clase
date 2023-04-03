@@ -12,6 +12,10 @@ app.listen(3000, function(){ // a la escucha en el puerto 3000
 	console.log("Servidor lanzado en el puerto 3000");
 });
 
+
+// Guardo los usuarios para cuando hay errores en el UPDATE
+usuarios = 0
+
 // View Engine
 app.set('view engine', 'ejs'); // motor de plantillas
 app.set('views', path.join(__dirname, "views")); // carpeta donde guardar las vistas
@@ -96,18 +100,18 @@ app.get('/users/getUser/:id', function(req, res) {
 
 // Se ejecuta cuando se manda UPDATE a /users/updateUser/
 app.post('/users/updateUser/:id', [
-	check("first_name", "El nombre es obligatorio").notEmpty(),
-    check("last_name", "El apellido es obligatorio").notEmpty(),
-    check("email", "El email es obligatorio").notEmpty()
+	check("usuario.first_name", "El nombre es obligatorio").notEmpty(),
+    check("usuario.last_name", "El apellido es obligatorio").notEmpty(),
+    check("usuario.email", "El email es obligatorio").notEmpty()
 
 	], 
 	function(req, res){
-		console.log("a")
 		const errors = validationResult(req); // obtenemos los posibles errores
 		if (!errors.isEmpty()) { // en caso de que el array de errores contenga algun error
+			console.log(req.body)
 			res.render('index', {
 				title:'clientes',
-				users: users,
+				users: usuarios,
 				errors: errors.array()
 			});
 		} 
@@ -118,16 +122,17 @@ app.post('/users/updateUser/:id', [
 					{ _id: ObjectId(req.params.id) },
 				// Lo actualiza
 				update: 
-					{ $set: { 'first_name': req.body.first_name } }
+					{ $set: { 'first_name': req.body.usuario.first_name } }
 				}, 
 				function(err, result) {
 					if(err){
 						console.log(err)
 					}
-					res.redirect("/")
+					
 				}
-			) 
+			)
 		}
+		res.redirect(303, "/")
 	
 })
 
@@ -157,7 +162,9 @@ app.get("/", function(req, res) {  // peticion y respuesta como parametros
 		res.render('index', {
 		title: 'clientes',
 		users: docs // cambiamos users por docs
+		
 		});
+		usuarios = docs
 	}
 		});
 });
