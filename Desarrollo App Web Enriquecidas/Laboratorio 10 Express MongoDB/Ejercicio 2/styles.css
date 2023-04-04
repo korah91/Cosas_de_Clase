@@ -1,0 +1,20 @@
+#dropbox{
+    border: 3px dashed rgb(80, 80, 82);
+    height: 100px;
+    width: 600px;
+    margin-top: 10px;
+    color: rgb(80, 80, 82);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#dropbox.hover{
+    color: #71e94d;
+    border: 1px dashed #71e94d;
+
+
+}
+.alerta {
+    color: orange;
+  }
+  

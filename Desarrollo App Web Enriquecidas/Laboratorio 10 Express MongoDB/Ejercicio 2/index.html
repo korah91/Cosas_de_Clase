@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Ejercicio Canvas</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+    <h1>Ejercicio formularios y Drag&Drop</h1>
+    <form name="miFormulario" enctype="multipart/form-data" id="formulario"> 
+        
+        <fieldset>
+            <legend>Datos del cliente</legend>
+            <br>
+            Nombre: <input autofocus type="text" autofocus placeholder="Introduce tu nombre" id="nombre">
+            <div id="nomAlerta" class="alerta"></div> 
+            <br>
+            Teléfono: <input type="tel" placeholder="Patrón: 123-456-789" id="telf">
+            <div id="tlfAlerta" class="alerta"></div> 
+            <br> 
+            Email: <input type="email" placeholder="Introduce tu dirección de correo electrónico" id="correo" size="60">
+            <div id="correoAlerta" class="alerta"></div>
+            <br><br>
+        </fieldset> 
+        <fieldset>
+            <legend>Libros</legend>
+            <br>
+            <input id="libros" type="text" list="Libros"> Cantidad (Máx 5): <input item id="cantidad" type="number" min="1" max="5" size="30">
+            <div id="librosAlerta" class="alerta"></div>
+            <div id="cantidadAlerta" class="alerta"></div>
+            <br><br>
+        </fieldset>
+        <fieldset>
+            <legend>File Upload</legend>
+            Elige los ficheros a subir: <input id="fileselect" type="file" multiple>
+            <div id="dropbox">Arrastra aquí tus ficheros</div>
+            <br><br>
+        </fieldset>
+        <input type="button" id="enviar" value="Enviar">
+    </form>
+    <datalist id="Libros">
+        <option value="Libro1">
+        <option value="Libro2">
+        <option value="Libro3">
+        <option value="Libro4">
+        <option value="Libro5">
+    </datalist>
+
+    <div id="mensajes"><p>Mensajes de estado</p></div>
+    <script src="script.js"></script>
+    </body>
+</html>
