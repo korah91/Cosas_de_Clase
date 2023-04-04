@@ -100,9 +100,9 @@ app.get('/users/getUser/:id', function(req, res) {
 
 // Se ejecuta cuando se manda UPDATE a /users/updateUser/
 app.post('/users/updateUser/:id', [
-	check("usuario.first_name", "El nombre es obligatorio").notEmpty(),
-    check("usuario.last_name", "El apellido es obligatorio").notEmpty(),
-    check("usuario.email", "El email es obligatorio").notEmpty()
+	check("first_name", "El nombre es obligatorio").notEmpty(),
+    check("last_name", "El apellido es obligatorio").notEmpty(),
+    check("email", "El email es obligatorio").notEmpty()
 
 	], 
 	function(req, res){
@@ -122,7 +122,7 @@ app.post('/users/updateUser/:id', [
 					{ _id: ObjectId(req.params.id) },
 				// Lo actualiza
 				update: 
-					{ $set: { 'first_name': req.body.usuario.first_name } }
+					{ $set: { 'first_name': req.body.first_name } }
 				}, 
 				function(err, result) {
 					if(err){

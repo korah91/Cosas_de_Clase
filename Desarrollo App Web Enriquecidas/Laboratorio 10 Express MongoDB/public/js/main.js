@@ -11,8 +11,8 @@ window.onload = function() {
     }
 
     // Boton para guardar cambios de un elemento
-    btn_edit = document.getElementsByName('submit')[0]
-    btn_edit.addEventListener('click', guardarCambios);
+    //btn_edit = document.getElementsByName('submit')[0]
+    //btn_edit.addEventListener('click', guardarCambios);
 }
 
 function deleteUser(event){
@@ -39,9 +39,6 @@ id_usuario = 0
 function editUser(event){
     
 
-    // Se cambia el boton a Edit
-    document.getElementsByName("submit")[0].value = "Edit"
-
     
 
     var url = '/users/getUser/' + event.target.getAttribute('data-id');
@@ -56,9 +53,16 @@ function editUser(event){
         document.getElementsByName("first_name")[0].value = respuesta['first_name']
         document.getElementsByName("last_name")[0].value = respuesta['last_name']
         document.getElementsByName("email")[0].value = respuesta['email']
-    } )
-}
 
+
+        // Se cambia el boton a Edit
+        document.getElementsByName("submit")[0].value = "Edit"
+        document.getElementById('form').action = '/users/updateUser/'+id_usuario
+    } )
+
+    
+}
+/*
 // Se usa para guardar los cambios
 function guardarCambios(event) {
     if (event.target.value == 'Edit'){
@@ -87,3 +91,4 @@ function guardarCambios(event) {
         
     }
 }
+*/
