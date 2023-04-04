@@ -1,7 +1,0 @@
-Primero:
-
-npm install express
-npm install nodemon -g
-
-
-nodemon app.js
