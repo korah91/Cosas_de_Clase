@@ -1,0 +1,9 @@
+Primero:
+
+npm install express
+npm install nodemon -g
+npm install express-validator
+npm install ejs
+npm install --save multer
+
+nodemon app.js

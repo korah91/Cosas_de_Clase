@@ -45,6 +45,7 @@ function parseFile(file) {
 		
 function enviar(){
 	console.log("Enviado");
+	document.getElementById("upload").submit();
 }
 
 function comprobarCampos(){
