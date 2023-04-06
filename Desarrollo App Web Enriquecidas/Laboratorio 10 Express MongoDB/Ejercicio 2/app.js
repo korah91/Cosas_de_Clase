@@ -9,9 +9,10 @@ const storage = multer.diskStorage({
         cb(null, 'public/imgs')
     },
     filename: (req, file, cb) => {
-        console.log(file)
+        //console.log(file)
         cb(null, Date.now() + path.extname(file.originalname))
     },
+    limits: '2MB'
 
 });
 
@@ -54,18 +55,27 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 // Anadir usuario
-app.post('/upload/files', upload.single('fileselect'),
+app.post('/upload/files', upload.array('fileselect',12),
 	function(req, res){
 		// Obtenemos el usuario del formulario
-        var newUsuario = {
+        var objetoJSON = {
+            'exito': true,
             'nombre': req.body.nombre,
-            'tel': req.body.tel,
+            'telefono': req.body.telefono,
             'email': req.body.email,
-            'libro': req.body.libro,
-            'cantidad': req.body.cantidad
-        }
-        console.log("Se completa POST")
+            'libros': req.body.libros,
+            'cantidad': req.body.cantidad,
+            'lista_imagenes': req.files
             
+        }   
+        //console.log("Se ha recibido en servidor")
+        //console.log(req.files)
+        //const file = req.file
+
+
+
+        res.send(objetoJSON)
+
         /*
         res.render('index', {
             user: newUsuario
@@ -79,6 +89,8 @@ app.get('/', function(req, res){
     res.render('index')
 }
 );
+
+
 
 
 

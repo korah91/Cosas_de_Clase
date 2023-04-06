@@ -27,7 +27,7 @@ function fileSelectHandler(e) {
 
 	// files can be added by drag&drop or clicking on form's button
 	// if the later, append files to form files field 
-	var formFiles = documento.getElementById("upload").fileselect;
+	var formFiles = document.getElementById("upload").fileselect;
 	if (formFiles.files.length == 0){
 		formFiles.files = files;
 	}
@@ -45,7 +45,7 @@ function parseFile(file) {
 		
 function enviar(){
 	console.log("Enviado");
-	document.getElementById("upload").submit();
+	funcionSubmit();
 }
 
 function comprobarCampos(){
@@ -126,6 +126,7 @@ function init() {
 	var submitbutton = document.getElementById("enviar");
 		
 	submitbutton.addEventListener("click", enviarHandler, false);
+
 	// file select
 	fileselect.addEventListener("change", fileSelectHandler, false);
 	// file drop
@@ -133,4 +134,53 @@ function init() {
 	filedrag.addEventListener("dragleave", fileDragHover, false);
 	filedrag.addEventListener("drop", fileSelectHandler, false);
 	filedrag.style.display = "block";
+}
+
+function funcionSubmit(){
+	formulario = document.getElementById("upload")
+	const formData = new FormData(formulario);
+	
+	url = '/upload/files'
+	fetch(url, {
+		method: 'POST',
+		body: formData
+	}).then( (response) => {
+		return response.json()
+	}).then( (response) => {
+		// Ahora se escriben los datos del usuario
+		document.getElementById('1').innerHTML = 'Nombre: ' + response['nombre']
+		document.getElementById('2').innerHTML = 'Teléfono: ' + response['telefono']
+		document.getElementById('3').innerHTML = 'Email: ' + response['email']
+		document.getElementById('4').innerHTML = 'Libros: ' + response['libros']
+		document.getElementById('5').innerHTML = 'Cantidad: ' + response['cantidad']
+		
+		document.getElementById('6').innerHTML = 'Imagenes: '
+		
+		lista_imagenes = response['lista_imagenes']
+		// Lista con los path de las imagenes
+		lista_path = lista_imagenes.map(imagen => imagen.path)
+
+		// Añado las imagenes al DOM
+		lista_path.forEach( (path) => {
+			path = path.replace("public/", '')
+			// Se crea el enlace
+			el_a = document.createElement("a")
+			el_a.href = path
+			//el_a.style.width = '100px'
+
+			// Se crea la imagen
+			el_img = document.createElement("img")
+			el_img.src = path			
+			el_img.style.width = '100px'
+
+			
+			// Se crean ambos en el DOM
+			el_a.appendChild(el_img)
+			document.getElementById('6').appendChild(el_a)
+		})
+
+		// Imprimimos el booleano de la respuesta
+		console.log('Booleano de la consulta: ' + response['exito'])
+	}
+	)
 }
