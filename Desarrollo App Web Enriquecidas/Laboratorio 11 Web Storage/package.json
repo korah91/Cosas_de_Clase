@@ -1,0 +1,14 @@
+{
+  "name": "laboratorio-11-web-storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "postits.js",
+  "scripts": {
+    "start": "serve ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
