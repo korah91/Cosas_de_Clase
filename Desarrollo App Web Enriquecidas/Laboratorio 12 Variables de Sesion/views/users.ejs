@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>MongoDB</title>
+<meta charset="utf-8">
+
+
+<%- include('partials/headers.ejs') %>
+
+<h1>
+    <%=title %>
+</h1>
+
+<!--- Pongo el email que manda users.js -->
+
+Hi there <br> <%=email %><br>
+<ul>
+    <% users.forEach(function(user) { %>
+        <li> <%=user.first_name %> <%=user.last_name %> - <a href="#" class="deleteUser" data-id="<%= user._id %>">Delete</a> - <a href="#" class="editUser" data-id="<%= user._id %>">Edit</a> </li>
+    <% }) %>
+</ul>
+
+<h1>Insertar Cliente</h1>
+
+<form method="POST" action="/users/add" id="form"> 
+    <label>Nombre</label>
+	<input type="text" name="first_name">
+	<br>
+	<label>Apellido</label>
+	<input type="text" name="last_name">
+	<br>
+	<label>Email</label>
+	<input type="text" name="email">
+	<br>
+	<input type="submit" Value="Enviar" name="submit">
+</form>
+
+<a href='/users/logout'>Logout</a>
+
+<ul>
+	<% if (errors) { %>
+	<% errors.forEach( function(error){  %>
+    	<li><%=error.msg %></li>
+	<% }) %>
+	<% } %>
+    
+</ul>
+
+
+<%- include('partials/footer.ejs') %>
+
+
+</body>
+</html>
