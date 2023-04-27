@@ -23,10 +23,11 @@ this.addEventListener('fetch', event => {
     // request.mode = navigate no esta soportado por todos los navegadores, incluimos una segunda opcion tras el ||
     if (event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
             event.respondWith( // respuesta que daremos
-                // peticion al servidor, si hay conexion ira bien, si no (no hay conexion) devolvemos lo que tengamos cacheado
-                fetch(event.request.url).catch(error => { 
-                    return caches.match(offlineUrl); // devolvemos lo cacheado
+                fetch(createCacheBustedRequest(event.request.url)).catch(error => {
+                    // Return the offline page
+                    return caches.match(offlineUrl);
                 })
+   
         );
     }
     else{ // si no es una peticion de una pagina HTML
@@ -36,4 +37,20 @@ this.addEventListener('fetch', event => {
         }));
     }
 });
+
+
+
+function createCacheBustedRequest(url){ 
+    let request= new Request(url, {cache:'reload'});
+
+    if ('cache' in request){ // si el navegador fuese moderno, con esto seria suficiente
+        return request;
+    }
+
+    // para navegadores no-modernos, añadimos un parametro cachebust con la fecha actual como valor
+    let bustedURL= new URL(url, self.location.href);
+    bustedURL.search += (bustedURL.search ? '&' : '') + 'cachebust=' + Date.now();
+    return request;
+}
+
 

@@ -222,5 +222,17 @@ function iniciarJuego(canvasElement, moveCountElement) {
     gCanvasElement.addEventListener("click", gestorClick, false);
     gMoveCountElem = moveCountElement;
     gDrawingContext = gCanvasElement.getContext("2d");
+
+	pEstado = document.getElementById('estado')
+	// Si esta offline 
+	if (window.navigator.onLine){
+		pEstado.innerHTML = 'Online'
+		pEstado.style.color = 'Green'
+
+	}
+	else{
+		pEstado.innerHTML = 'Offline'
+		pEstado.style.color = 'Red'
+	}
     newGame();
 }
