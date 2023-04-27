@@ -1,4 +1,5 @@
 window.onload = function() {
+    console.log("JS")
     let links = document.getElementsByClassName("deleteUser");
     for (let item of links) {
     	item.addEventListener("click", deleteUser);

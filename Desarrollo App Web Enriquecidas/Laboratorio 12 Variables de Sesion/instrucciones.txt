@@ -1,5 +1,0 @@
-Para iniciarlo:
-npm install para instalar dependencias
-npm start
-
-luego ir a http://localhost:3000/email-password.html

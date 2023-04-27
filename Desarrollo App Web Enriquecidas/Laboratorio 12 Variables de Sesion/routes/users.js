@@ -1,5 +1,5 @@
 var express = require("express")
-var router = express.Router();
+var router = express();
 var session = require('express-session')
 
 const { check, validationResult } = require('express-validator');
@@ -8,15 +8,23 @@ var path = require("path"); // viene por defecto en Node
 const mongojs = require('mongojs')
 var ObjectId = mongojs.ObjectId;
 const db = mongojs('clientespp', ['users'])
+router.use(express.static(path.join(__dirname, "public")));
 
-router.use(session({ secret: 'keyboard cat', cookie: { maxAge: 10000 }, resave: true, saveUninitialized:true}))
+// View Engine
+router.set('view engine', 'ejs'); // motor de plantillas
+router.set('views', path.join(__dirname, "../views")); // carpeta donde guardar las vistas
 
+// Middleware para el parseo de req.body
+router.use(express.json()); // coge los datos en crudo y los pasa a json
+
+// Que parsee datos que lleguen en la query HTTP y los deje como un objeto JSON
+router.use(express.urlencoded({extended: false}));
+
+// Declaracion y definicion de variables globales: en este caso errors
 router.use(function (req, res, next) {
-	// Pongo error como variable global
-    res.locals.errors = null;
-    next();
+  res.locals.errors = null;
+  next();
 });
-
 
 // Anadir usuario
 router.post('/add', 
@@ -119,10 +127,6 @@ router.delete('/delete/:id', function(req, res) {
     });
 });
 
-
-
-
-
 // Enrutamiento
 router.get("/", function(req, res) {  // peticion y respuesta como parametros
 
@@ -134,7 +138,7 @@ router.get("/", function(req, res) {  // peticion y respuesta como parametros
 		} else {
 			console.log(docs); // lo que mongodb nos devuelva
 			// para rellenar la plantilla
-			res.render('users', {
+			res.render('index2', {
 				title: 'clientes',
 				email: req.session.email,
 				users: docs // cambiamos users por docs
@@ -145,31 +149,13 @@ router.get("/", function(req, res) {  // peticion y respuesta como parametros
     }
     else {
         res.write('<h1>Please login first.</h1>');
-        res.end('<a href='+'/email-password.html'+'>Login</a>');
+        res.end('<a href='+'/email-password.html?logout'+'>Login</a>');
 		console.log(req.session)
-    
-
-
-
-
+  
 }
 });
 
-router.get('/logout',(req,res) => {
-    req.session.destroy((err) => {
-        if(err) {
-            return console.log(err);
-        }
-        res.redirect('/email-password.html?logout');
-    });
-});
 
-// Cuando le mando a login CREO la sesion
-router.post('/login',(req,res) => {
-	console.log("He recibido un POST a /login")
-	console.log("email: ", req.body.email)
-	req.session.email = req.body.email;
-	res.end();
-  });
+
 
 module.exports = router;

@@ -1,0 +1,3 @@
+Escribir dentro de la carpeta:
+GOOGLE_APPLICATION_CREDENTIALS='clavePrivada.json' npm start
+

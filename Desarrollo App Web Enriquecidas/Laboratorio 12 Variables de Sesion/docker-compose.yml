@@ -1,0 +1,12 @@
+# Esto es para levantar el mongodb
+version: '3'
+services:
+  database:
+    image: 'mongo'
+    container_name: 'mongo'
+    volumes:
+        - ./datosMongoDB:/data/db
+
+    ports:
+        - 27017:27017
+
