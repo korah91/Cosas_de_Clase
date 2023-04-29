@@ -4,7 +4,7 @@ var cacheVersion = 1; // variables que vamos a necesitar
 var currentCache = {
     offline: 'offline-cache' + cacheVersion
 };
-const paginaOffline = 'index.html'; // pagina que queremos cachear
+const paginaOffline = 'offline-page.html'; // pagina que queremos cachear
 const jsOffline = 'juego.js'
 
 this.addEventListener('install', event => { // el evento “install” lo lanza el SW
@@ -25,7 +25,7 @@ this.addEventListener('fetch', event => {
             event.respondWith( // respuesta que daremos
                 fetch(createCacheBustedRequest(event.request.url)).catch(error => {
                     // Return the offline page
-                    return caches.match(offlineUrl);
+                    return caches.match(paginaOffline);
                 })
    
         );
