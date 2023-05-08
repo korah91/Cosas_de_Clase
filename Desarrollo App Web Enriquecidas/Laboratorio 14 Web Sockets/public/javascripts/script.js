@@ -5,7 +5,21 @@ import {setupSockets} from "./sockets.js";
 
 window.onload = function(){
 
-    setupSockets
+    //setupSockets()
+    const socket = io.connect(serverURL, {secure: true});
+    // register dekstop connection
+    socket.emit('desktop-connect');
+
+    // Creo que si tomo gamma puedo ir de arriba a abajo
+    socket.on('phone-move', function(beta) {
+        if (beta<0){
+            pulsarTecla('ArrowLeft')
+        }
+        if (beta>0){
+            pulsarTecla('ArrowRight')
+        }
+    });
+
 
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext("2d");
@@ -18,8 +32,10 @@ window.onload = function(){
     var window_h = 35; // altura de la ventana
     var offset_fixed_window = 10; // espacio entre el spritesheet y la ventana fija de la derecha
 
+    // Este es el script del desktop
+
     var logo = new Image();
-    logo.src = './canvas/img/spritesheet.png';
+    logo.src = '../img/spritesheet.png';
     logo.onload = function(){
         context.drawImage(logo, 0, 0); // dibujar el spritesheet
         img_w = this.width;
@@ -60,4 +76,19 @@ window.onload = function(){
         context.fillText("("+x+","+y+")", 435, 10); // texto que muestra la posicion actual
         context.stroke();
     }
+}
+
+function pulsarTecla(tecla){
+    // Primero simulamos que pisamos la tecla
+    window.dispatchEvent(
+        new KeyboardEvent('keydown',
+            {key: tecla //ArrowLeft, ArrowDown...
+        })
+    );
+    // Y luego que dejamos de pisarla (levantamos el dedo)
+    window.dispatchEvent(
+        new KeyboardEvent('keyup',
+            {key: tecla
+        })
+    );
 }

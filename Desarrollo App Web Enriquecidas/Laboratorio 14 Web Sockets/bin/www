@@ -44,9 +44,8 @@ httpsServer
         console.log('Example app listening on port 3030! Go to https://localhost:3030/')
     });
 
-const io = require('socket.io');
 // create a WebSocket listener for the same server
-const realtimeListener = io.listen(httpsServer);
+const realtimeListener = require('socket.io')(httpsServer);
 
 
 // object to store desktop sockets
@@ -76,8 +75,6 @@ realtimeListener.on('connection', function (socket) {
         if (desktopSocket)
             desktopSocket.emit('phone-move', data.beta);
     });
-
-    // el movil
 });
 
 

@@ -12,6 +12,6 @@ function setupSockets(){
     }
     
     socket.send("movimiento válido");
-    
-    
 }
+// Exporto la funcion
+export { setupSockets };

@@ -1,5 +1,6 @@
 const serverURL = window.location.hostname + ":" +  window.location.port;
 
+// Este es el script del movil
 window.onload = function(){
 
     const socket = io.connect(serverURL, {secure: true});
