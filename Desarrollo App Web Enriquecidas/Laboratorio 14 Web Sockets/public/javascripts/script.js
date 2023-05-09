@@ -1,25 +1,15 @@
 import {setupSockets} from "./sockets.js";
 
-const serverURL = window.location.hostname + ":" +  window.location.port;
 
 
 // Este es el js de Desktop
 window.onload = function(){
 
-    //setupSockets()
-    const socket = io.connect(serverURL, {secure: true});
-    // register dekstop connection
-    socket.emit('desktop-connect');
+    // Llamo a la funcion importada
+    setupSockets()
 
-    // Creo que si tomo gamma puedo ir de arriba a abajo
-    socket.on('phone-move', function(beta) {
-        if (beta<0){
-            pulsarTecla('ArrowLeft')
-        }
-        if (beta>0){
-            pulsarTecla('ArrowRight')
-        }
-    });
+
+    
 
 
     const canvas = document.getElementById('canvas');
