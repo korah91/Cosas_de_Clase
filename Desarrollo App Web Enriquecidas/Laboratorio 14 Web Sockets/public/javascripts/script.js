@@ -3,7 +3,7 @@ import {setupSockets} from "./sockets.js";
 const serverURL = window.location.hostname + ":" +  window.location.port;
 
 
-
+// Este es el js de Desktop
 window.onload = function(){
 
     //setupSockets()
@@ -54,21 +54,42 @@ window.onload = function(){
         switch(tecla.code){
 
             case "ArrowLeft":
-                if(x>0)
+                if(x>0){
                     x=Math.max(0,x-speed);
+                }
+                // Si esta al limite vibra el telefono
+                else{
+                    socket.emit('crash');
+                }
                 break;//izquierda
             case "ArrowUp":
-                if(y>0)
-                y=Math.max(0, y-speed);       
+                if(y>0){
+                    y=Math.max(0, y-speed);
+                }
+                // Si esta al limite vibra el telefono
+                else{
+                    socket.emit('crash');
+                }
                 break;  
             case "ArrowRight":
                 //if(x+27<476)
-                if(x+window_w<img_w)
-                x=Math.min(img_w-window_w-1, x+speed);
+                if(x+window_w<img_w){
+                    x=Math.min(img_w-window_w-1, x+speed);
+                }
+                // Si esta al limite vibra el telefono
+                if (x==450){
+                    socket.emit('crash');
+                }
+                
                 break;
             case "ArrowDown":
-                if(y+window_h<img_h)
-                y=Math.min(img_h-window_h-1, y+speed);
+                if(y+window_h<img_h){
+                    y=Math.min(img_h-window_h-1, y+speed);
+                }
+                // Si esta al limite vibra el telefono
+                if (y == 444){
+                    socket.emit('crash');
+                }
                 break;
         }     
         

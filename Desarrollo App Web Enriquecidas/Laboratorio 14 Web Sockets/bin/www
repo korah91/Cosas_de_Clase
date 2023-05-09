@@ -63,6 +63,8 @@ realtimeListener.on('connection', function (socket) {
     // receives a connect message from a phone
     socket.on("phone-connect", function () {
         console.log("Phone Connected");
+        // Se guarda el socket del movil
+        phoneSocket = socket
         if (desktopSocket) {
             // ... informs desktop that a phone has connected
             desktopSocket.emit('phone-connect');
@@ -74,6 +76,15 @@ realtimeListener.on('connection', function (socket) {
         console.log("Phone moved:" + data.beta  );
         if (desktopSocket)
             desktopSocket.emit('phone-move', data.beta);
+    });
+
+    // Cuando en desktop no se puede mover a una direccion porque esta en el borde, se manda aqui un 'crash'
+    // Asi que ahora se manda de aqui al movil 'crash' tambien para que el movil vibre
+    // Si esta al limite vibra el telefono
+    socket.on("crash", function() {
+        console.log("El telefono deberia vibrar");
+        if (phoneSocket)
+            phoneSocket.emit('crash');
     });
 });
 

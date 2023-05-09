@@ -9,6 +9,7 @@ window.onload = function(){
 
     socket.on('crash', function() {
         navigator.vibrate(500);
+        console.log("Vibracion");
     });
 
     var update = function(id, value) {
