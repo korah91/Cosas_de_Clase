@@ -1,5 +1,6 @@
 import {setupSockets} from "./sockets.js";
 
+const serverURL = window.location.hostname + ":" +  window.location.port;
 
 
 
@@ -35,8 +36,12 @@ window.onload = function(){
     // Este es el script del desktop
 
     var logo = new Image();
-    logo.src = '../img/spritesheet.png';
+    logo.src = '/../img/spritesheet.png';
+    
     logo.onload = function(){
+
+        console.log(logo)
+
         context.drawImage(logo, 0, 0); // dibujar el spritesheet
         img_w = this.width;
         img_h = this.height;
