@@ -5,13 +5,21 @@ const serverURL = window.location.hostname + ":" +  window.location.port;
 function setupSockets(){
     const socket = io.connect(serverURL, {secure: true});
 
-    socket.emit('phone-connect');
+    socket.emit('desktop-connect');
 
     socket.onopen = function(){
         console.log("Socket conectado!");
     }
     
-    socket.send("movimiento válido");
+    // Creo que si tomo gamma puedo ir de arriba a abajo
+    socket.on('phone-move', function(beta) {
+        if (beta<0){
+            pulsarTecla('ArrowLeft')
+        }
+        if (beta>0){
+            pulsarTecla('ArrowRight')
+        }
+    });
 }
 // Exporto la funcion
 export { setupSockets };
